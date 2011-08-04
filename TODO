@@ -1,0 +1,7 @@
+- use defer / async tags?
+- HTTPS.
+- Use http://defunkt.io/facebox/ instead of alerts and prompts.
+...or...
+- rewrite bloki.js using GWT.
+- Multi-line support for corrections.
+- only allow "long" (relative) corrections.

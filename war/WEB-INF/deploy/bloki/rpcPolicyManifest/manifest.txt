@@ -1,0 +1,3 @@
+# Module bloki
+# RPC service class, partial path of RPC policy file
+at.tomtasche.bloki.engine.client.RegisterService, F8BBF9567AE4686367ED60D5AA680D61.gwt.rpc

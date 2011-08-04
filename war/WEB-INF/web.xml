@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>RegisterServlet</servlet-name>
+		<servlet-class>at.tomtasche.bloki.engine.server.RegisterServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>RegisterServlet</servlet-name>
+		<url-pattern>/bloki/register</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>SubmitServlet</servlet-name>
+		<servlet-class>at.tomtasche.bloki.engine.server.SubmitServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SubmitServlet</servlet-name>
+		<url-pattern>/submit/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>bloki.html</welcome-file>
+	</welcome-file-list>
+
+</web-app>

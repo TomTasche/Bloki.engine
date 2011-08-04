@@ -1,0 +1,110 @@
+package at.tomtasche.bloki.engine.server;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyService;
+
+@SuppressWarnings("serial")
+public class SubmitServlet extends HttpServlet {
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	response.sendError(HttpServletResponse.SC_FORBIDDEN);
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	response.setHeader("Access-Control-Allow-Origin", "*");
+	response.setHeader("Access-Control-Allow-Methods", "POST");
+	response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type");
+	response.setHeader("Access-Control-Max-Age", "10"); //1728000
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+	response.setHeader("Access-Control-Allow-Origin", "*");
+
+	InputStreamReader reader = new InputStreamReader(request.getInputStream());
+	BlokiPacket packet = new Gson().fromJson(reader, BlokiPacket.class);
+	if (packet == null) return;
+
+	String body = buildMessage(packet);
+
+	try {
+	    Customer customer = getCustomer(packet);
+	    if (customer == null) {
+		customer = new Customer(new URL(packet.getUrl()).getHost(), "tomtasche+bloki@gmail.com");
+
+		sendMail(customer, packet, body);
+
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+		return;
+	    }
+
+	    sendMail(customer, packet, body);
+
+	    response.setStatus(HttpServletResponse.SC_OK);
+	} catch (Exception e) {
+	    e.printStackTrace();
+
+	    // response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+	    
+	    response.getWriter().println("errorrr");
+
+	    // e.printStackTrace(response.getWriter());
+	} finally {
+	    reader.close();
+	}
+    }
+
+
+    private Customer getCustomer(BlokiPacket packet) throws MalformedURLException {
+	ObjectifyService.register(Customer.class);
+	Objectify objectify = ObjectifyService.begin();
+
+	return objectify.query(Customer.class).filter("url", new URL(packet.getUrl()).getHost()).get();
+    }
+
+    private void sendMail(Customer customer, BlokiPacket packet, String body) throws UnsupportedEncodingException, MessagingException, MalformedURLException {
+	URL url = new URL(packet.getUrl());
+
+	Properties props = new Properties();
+	Session session = Session.getDefaultInstance(props, null);
+
+	Message message = new MimeMessage(session);
+	message.setFrom(new InternetAddress(url.getHost() + "@bloki-engine.appspotmail.com", "Bloki Bot"));
+
+	message.addRecipient(Message.RecipientType.TO, new InternetAddress(customer.getMail(), "Owner of " + url.getHost()));
+
+	message.setSubject("We found a typo at your blog");
+	message.setText(body);
+
+	Transport.send(message);
+    }
+
+    private String buildMessage(BlokiPacket packet) {
+	String body = "<html>Hello,<p>One of your readers found the following mistake: '<b>" + packet.getMistake() + "</b>' <a href=\"" + packet.getUrl() + "\">on your blog</a>.<br />";
+	body += "He suggests to replace it with '<b>" + packet.getCorrection() + "</b>'.</p>Have a great, typo-free day,<br />Bloki Bot.</html>";
+
+	return body;
+    }
+}

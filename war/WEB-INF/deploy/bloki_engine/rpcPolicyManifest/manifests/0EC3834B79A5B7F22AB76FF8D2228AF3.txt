@@ -1,0 +1,2 @@
+serviceClass: at.tomtasche.bloki.engine.client.GreetingService
+path: 4375823AB3443E1F347F0286B8ED591C.gwt.rpc
