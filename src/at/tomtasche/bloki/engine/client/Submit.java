@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -53,7 +54,7 @@ public class Submit implements EntryPoint {
 		dialog.setText("Bloki - Crowdsourced typo fixjng");
 		dialog.setAnimationEnabled(true);
 
-		Label label = new Label("What should '" + mistake + "' read like instead?");
+		HTML label = new HTML("What should '<b>" + mistake + "</b>' read like instead?");
 		final TextBox textBox = new TextBox();
 		textBox.setWidth("90%");
 		textBox.setText(mistake);
@@ -68,16 +69,16 @@ public class Submit implements EntryPoint {
 			}
 
 			XMLHttpRequest request = XMLHttpRequest.create();
-			request.open("POST", "http://003.bloki-engine.appspot.com/submit");
+			request.open("POST", "http://bloki-engine.appspot.com/submit");
 			request.setOnReadyStateChange(new ReadyStateChangeHandler() {
 
 			    @Override
 			    public void onReadyStateChange(XMLHttpRequest xhr) {
 				dialog.hide();
-				
+
 				if (xhr.getStatus() != 200 && xhr.getStatus() != 401) {
 				    final DialogBox box = new DialogBox();
-				    
+
 				    Button closeButton = new Button("Close");
 				    closeButton.addClickHandler(new ClickHandler() {
 
