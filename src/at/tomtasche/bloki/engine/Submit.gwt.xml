@@ -20,5 +20,6 @@
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
 
+  <!-- Cross-site JS -->
   <add-linker name="xs" />
 </module>

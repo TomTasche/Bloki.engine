@@ -122,7 +122,7 @@ public class Register implements EntryPoint {
 			// Show the RPC error message to the user
 			dialogBox.setText("Registration - Failure");
 			serverResponseLabel.addStyleName("serverResponseLabelError");
-			serverResponseLabel.setHTML(SERVER_ERROR + "<p>Please send me a mail to <a href='mailto:tomtasche%40gmail.com'>tomtasche%40gmail.com</a> so I can find this issue's cause.</p>");
+			serverResponseLabel.setHTML(SERVER_ERROR + "<p>Please send me a mail to <a href='mailto:tomtasche%40gmail.com'>tomtasche@gmail.com</a> so I can find this issue's cause.</p>");
 			dialogBox.center();
 			closeButton.setFocus(true);
 		    }

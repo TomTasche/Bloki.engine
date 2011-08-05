@@ -28,10 +28,10 @@ public class Submit implements EntryPoint {
     public void onModuleLoad() {
 	Element div = DOM.createDiv();
 	div.setAttribute("style", "position:fixed; right:10px; bottom: 0; box-shadow: 0 0 10px #666; padding:10px; background-color:#333; color:#FFF; font-family: Arial;");
-	div.setInnerText("Blokchi - Fix typos");
+	div.setInnerText("Bloki - Fix typos");
 
 	Label.wrap(div).addMouseDownHandler(new MouseDownHandler() {
-	    
+
 	    @Override
 	    public void onMouseDown(MouseDownEvent event) {
 		// storing the mistake until we build the json object doesnt work...
@@ -57,7 +57,6 @@ public class Submit implements EntryPoint {
 		final TextBox textBox = new TextBox();
 		textBox.setWidth("90%");
 		textBox.setText(mistake);
-		textBox.selectAll();
 
 		Button sendButton = new Button("Send");
 		sendButton.addClickHandler(new ClickHandler() {
@@ -65,30 +64,46 @@ public class Submit implements EntryPoint {
 		    @Override
 		    public void onClick(ClickEvent event) {
 			if (textBox.getText().length() == 0 || textBox.getText().equals(hack.getText())) {
-			    dialog.hide();
-
 			    return;
 			}
 
 			XMLHttpRequest request = XMLHttpRequest.create();
-			// request.open("POST", "http://003.bloki-engine.appspot.com/submit");
-			request.open("POST", "http://localhost:8888/submit");
+			request.open("POST", "http://003.bloki-engine.appspot.com/submit");
 			request.setOnReadyStateChange(new ReadyStateChangeHandler() {
-			    
+
 			    @Override
 			    public void onReadyStateChange(XMLHttpRequest xhr) {
-				DialogBox box = new DialogBox();
-				box.add(new Label(xhr.getResponseText() + ";" + xhr.getStatus()));
-				box.center();
-				box.show();
+				dialog.hide();
+				
+				if (xhr.getStatus() != 200 && xhr.getStatus() != 401) {
+				    final DialogBox box = new DialogBox();
+				    
+				    Button closeButton = new Button("Close");
+				    closeButton.addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+					    box.hide();
+					}
+				    });
+
+				    VerticalPanel panel = new VerticalPanel();
+				    panel.setWidth("100%");
+				    panel.add(new Label("I couldn't reach the server.\nAre you really connected to the internet?\nIf so, feel free to contact me about this error. :)"));
+				    panel.add(closeButton);
+
+				    box.add(panel);
+				    box.center();
+				    box.show();
+				}
 			    }
 			});
-			
+
 			JSONObject object = new JSONObject();
 			object.put("mistake", new JSONString(hack.getText()));
 			object.put("correction", new JSONString(textBox.getText()));
 			object.put("url", new JSONString(Window.Location.getHref()));
-			
+
 			request.send(object.toString());
 		    }
 		});
@@ -101,7 +116,7 @@ public class Submit implements EntryPoint {
 			dialog.hide();
 		    }
 		});
-		
+
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setWidth("100%");
 		buttonPanel.add(closeButton);
@@ -119,6 +134,8 @@ public class Submit implements EntryPoint {
 
 		dialog.center();
 		dialog.show();
+
+		textBox.setFocus(true);
 	    }
 	});
 

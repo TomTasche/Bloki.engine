@@ -53,8 +53,6 @@ public class SubmitServlet extends HttpServlet {
 
 	String json = buffer.toString();
 	
-	System.out.println(json);
-	
 	response.getWriter().println(json);
 	response.getWriter().println();
 	
@@ -66,7 +64,7 @@ public class SubmitServlet extends HttpServlet {
 	try {
 	    Customer customer = getCustomer(packet);
 	    if (customer == null) {
-		customer = new Customer(new URL(packet.getUrl()).getHost(), "tomtasche+bloki@gmail.com");
+		customer = new Customer(new URL(packet.getUrl()).getHost(), "tomtasche+bloki-engine@gmail.com");
 
 		sendMail(customer, packet, body);
 
@@ -93,8 +91,10 @@ public class SubmitServlet extends HttpServlet {
     private Customer getCustomer(BlokiPacket packet) throws MalformedURLException {
 	ObjectifyService.register(Customer.class);
 	Objectify objectify = ObjectifyService.begin();
+	
+	String url = new URL(packet.getUrl()).getHost();
 
-	return objectify.query(Customer.class).filter("url", new URL(packet.getUrl()).getHost()).get();
+	return objectify.query(Customer.class).filter("url", url).get();
     }
 
     private void sendMail(Customer customer, BlokiPacket packet, String body) throws UnsupportedEncodingException, MessagingException, MalformedURLException {
@@ -103,20 +103,21 @@ public class SubmitServlet extends HttpServlet {
 	Properties props = new Properties();
 	Session session = Session.getDefaultInstance(props, null);
 
-	Message message = new MimeMessage(session);
+	MimeMessage message = new MimeMessage(session);
 	message.setFrom(new InternetAddress(url.getHost() + "@bloki-engine.appspotmail.com", "Bloki Bot"));
 
 	message.addRecipient(Message.RecipientType.TO, new InternetAddress(customer.getMail(), "Owner of " + url.getHost()));
 
 	message.setSubject("We found a typo at your blog");
-	message.setText(body);
+	message.setText(body, "text/html");
+	message.addHeader("Content-Type", "text/html");
 
 	Transport.send(message);
     }
 
     private String buildMessage(BlokiPacket packet) {
-	String body = "<html>Hello,<p>One of your readers found the following mistake: '<b>" + packet.getMistake() + "</b>' <a href=\"" + packet.getUrl() + "\">on your blog</a>.<br />";
-	body += "He suggests to replace it with '<b>" + packet.getCorrection() + "</b>'.</p>Have a great, typo-free day,<br />Bloki Bot.</html>";
+	String body = "<html>Hello,<p>One of your readers found the following mistake: '<b>" + packet.getMistake() + "</b>' <a href='" + packet.getUrl() + "'>on your blog</a>.<br />";
+	body += "He suggests to replace it with '<b>" + packet.getCorrection() + "</b>' instead.</p>Have a great, typo-free day,<br /><a href='http://blog.tomtasche.at/'>Tom</a> and your Bloki Bot.</html>";
 
 	return body;
     }

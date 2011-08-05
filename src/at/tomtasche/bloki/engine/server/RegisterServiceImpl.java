@@ -31,9 +31,9 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 	    return "Couldn't parse your mail: '" + mail + "'.";
 	}
 	
-	createCustomer(urlString, mail);
+	createCustomer(url.getHost(), mail);
 
-	return "Welcome, <a href='" + url.toString() + "'>" + url.getHost() + "</a>. Thank you very much for signing up for Bloki. I can't wait to hear what you think...<br />Now head over to the <a href='http://goo.gl/a2BNp'>instructions on how to install Bloki on your blog</a>.";
+	return "Welcome, <a href='http://" + url.getHost() + "/'>" + url.getHost() + "</a>. Thank you very much for signing up for Bloki. I can't wait to hear what you think...<br />Now head over to the <a href='http://goo.gl/a2BNp'>instructions on how to install Bloki on your blog</a>.";
     }
     
     
