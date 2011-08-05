@@ -9,9 +9,15 @@ public class BlokiPacket {
     String url;
     
     
-    public BlokiPacket() {}
+    BlokiPacket() {}
     
-    
+    public BlokiPacket(String mistake, String correction, String url) {
+	this.mistake = mistake;
+	this.correction = correction;
+	this.url = url;
+    }
+
+
     public String getMistake() {
 	return mistake;
     }

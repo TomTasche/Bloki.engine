@@ -1,8 +1,5 @@
 package at.tomtasche.bloki.engine.server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,52 +11,26 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
+import at.tomtasche.bloki.engine.client.SubmitService;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
+/**
+ * The server side implementation of the RPC service.
+ */
 @SuppressWarnings("serial")
-public class SubmitServlet extends HttpServlet {
+public class SubmitServiceImpl extends RemoteServiceServlet implements SubmitService {
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-	response.sendError(HttpServletResponse.SC_FORBIDDEN);
-    }
-
-    @Override
-    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	response.setHeader("Access-Control-Allow-Origin", "*");
-	response.setHeader("Access-Control-Allow-Methods", "POST");
-	response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type");
-	response.setHeader("Access-Control-Max-Age", "10"); //1728000
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
-	response.setHeader("Access-Control-Allow-Origin", "*");
-
-	InputStreamReader reader = new InputStreamReader(request.getInputStream());
-	BufferedReader buffReader = new BufferedReader(reader);
-
-	StringBuffer buffer = new StringBuffer();
-	for (String s = buffReader.readLine(); s != null; s = buffReader.readLine()) {
-	    buffer.append(s);
-	}
-
-	String json = buffer.toString();
+    public String submit(String mistake, String correction, String url) throws IllegalArgumentException {
+	// Escape data from the client to avoid cross-site script vulnerabilities.
+	url = escapeHtml(url);
+	mistake = escapeHtml(mistake);
+	correction = escapeHtml(correction);
 	
-	System.out.println(json);
-	
-	response.getWriter().println(json);
-	response.getWriter().println();
-	
-	BlokiPacket packet = new Gson().fromJson(json, BlokiPacket.class);
-	if (packet == null) return;
+	BlokiPacket packet = new BlokiPacket(mistake, correction, url);
 
 	String body = buildMessage(packet);
 
@@ -67,29 +38,34 @@ public class SubmitServlet extends HttpServlet {
 	    Customer customer = getCustomer(packet);
 	    if (customer == null) {
 		customer = new Customer(new URL(packet.getUrl()).getHost(), "tomtasche+bloki@gmail.com");
-
-		sendMail(customer, packet, body);
-
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-		return;
 	    }
 
 	    sendMail(customer, packet, body);
-
-	    response.setStatus(HttpServletResponse.SC_OK);
+	    
+	    return new Boolean(true).toString();
 	} catch (Exception e) {
 	    e.printStackTrace();
-
-	    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-
-	    e.printStackTrace(response.getWriter());
-	} finally {
-	    reader.close();
 	}
+
+	return new Boolean(false).toString();
     }
+    
 
-
+    /**
+     * Escape an html string. Escaping data received from the client helps to
+     * prevent cross-site script vulnerabilities.
+     * 
+     * @param html the html string to escape
+     * @return the escaped string
+     */
+    private String escapeHtml(String html) {
+	if (html == null) {
+	    return null;
+	}
+	
+	return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    }
+    
     private Customer getCustomer(BlokiPacket packet) throws MalformedURLException {
 	ObjectifyService.register(Customer.class);
 	Objectify objectify = ObjectifyService.begin();
