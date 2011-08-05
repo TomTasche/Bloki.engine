@@ -28,7 +28,7 @@
 
 	<!-- Default page to serve -->
 	<welcome-file-list>
-		<welcome-file>bloki.html</welcome-file>
+		<welcome-file>register.html</welcome-file>
 	</welcome-file-list>
 
 </web-app>
