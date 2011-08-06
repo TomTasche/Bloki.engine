@@ -59,7 +59,7 @@ public class Register implements EntryPoint {
 	mailField.selectAll();
 
 	// Create the popup dialog box
-	final DialogBox dialogBox = new DialogBox();
+	final DialogBox dialogBox = new DialogBox(true);
 	dialogBox.setText("Registration");
 	dialogBox.setAnimationEnabled(true);
 	final Button closeButton = new Button("Close");

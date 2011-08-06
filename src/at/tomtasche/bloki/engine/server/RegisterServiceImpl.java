@@ -24,25 +24,31 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 	try {
 	    url = new URL(urlString);
 	} catch (MalformedURLException e) {
-	    return "Couldn't parse your URL: '" + urlString + "'.";
+	    urlString = "http://" + urlString;
+
+	    try {
+		url = new URL(urlString);
+	    } catch (MalformedURLException e1) {
+		return "Couldn't parse your URL: '" + urlString + "'.";
+	    }
 	}
 
 	if (!mail.contains("@")) {
 	    return "Couldn't parse your mail: '" + mail + "'.";
 	}
-	
+
 	createCustomer(url.getHost(), mail);
 
 	return "Welcome, <a href='http://" + url.getHost() + "/'>" + url.getHost() + "</a>. Thank you very much for signing up for Bloki. I can't wait to hear what you think...<br />Now head over to the <a href='http://goo.gl/PUYGd'>instructions on how to install Bloki on your blog</a>.";
     }
-    
-    
+
+
     private void createCustomer(String url, String mail) {
 	ObjectifyService.register(Customer.class);
 	Objectify objectify = ObjectifyService.begin();
-	
+
 	Customer customer = new Customer(url, mail);
-	
+
 	objectify.put(customer);
     }
 

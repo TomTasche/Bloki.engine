@@ -52,7 +52,7 @@ public class Submit implements EntryPoint {
 		    return;
 		}
 
-		final DialogBox dialog = new DialogBox();
+		final DialogBox dialog = new DialogBox(true);
 		dialog.setText("Bloki - Crowdsourced typo fixjng");
 		dialog.setAnimationEnabled(true);
 
