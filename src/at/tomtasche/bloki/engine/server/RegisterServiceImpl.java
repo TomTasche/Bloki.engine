@@ -2,6 +2,8 @@ package at.tomtasche.bloki.engine.server;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import at.tomtasche.bloki.engine.client.RegisterService;
 
@@ -33,7 +35,7 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 	    }
 	}
 
-	if (!mail.contains("@")) {
+	if (!isValidEmailAddress(mail)) {
 	    return "Couldn't parse your mail: '" + mail + "'.";
 	}
 
@@ -50,6 +52,18 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 	Customer customer = new Customer(url, mail);
 
 	objectify.put(customer);
+    }
+
+    /**
+     * @author Dominic Bartl - http://bartinger.at/
+     * @param mail
+     * @return
+     */
+    private boolean isValidEmailAddress(String mail){  
+	String expression = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+	Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);  
+	Matcher matcher = pattern.matcher(mail);  
+	return matcher.matches();  
     }
 
     /**
