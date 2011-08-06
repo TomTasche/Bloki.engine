@@ -1,7 +1,11 @@
 - use defer / async tags?
 - HTTPS.
-- Use http://defunkt.io/facebox/ instead of alerts and prompts.
-...or...
-- rewrite bloki.js using GWT.
 - Multi-line support for corrections.
 - only allow "long" (relative) corrections.
+- highlight difference between mistake and correction in mails.
+- show detailed, easy, numbered instructions in a dialog, with pictures.
+
+- new design:
+-> ribbon like quickticket.at?
+-> look like uservoice?
+-> look like getsatisfaction?

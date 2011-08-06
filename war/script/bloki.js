@@ -1,4 +1,6 @@
 /**
+ * ATTENTION: Deprecated!
+ * 
  * More information at http://bloki.tomtasche.at/
  * 
  * @author Thomas Taschauer - tomtasche.at

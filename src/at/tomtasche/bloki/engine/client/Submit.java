@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
@@ -37,15 +38,16 @@ public class Submit implements EntryPoint {
 	    public void onMouseDown(MouseDownEvent event) {
 		// storing the mistake until we build the json object doesnt work...
 		// -> {"mistake":{"extentNode":null, "baseNode":null, "anchorNode":null, "focusNode":null, "rangeCount":0, "anchorOffset":0, "baseOffset":0, "focusOffset":0, "type":"None", "isCollapsed":true, "extentOffset":0}, "correction":"Blokiaw ", "url":"http://localhost:8888/submiti.html"}
+		// also, checking mistake for its length doesnt work either
 		String mistake = getSelectedText();
 
 		// ... so we're storing it in a invisible textbox. ;) PWND!
 		// TODO: find this problem's cause, please.
 		final TextBox hack = new TextBox();
 		hack.setText(mistake);
-
-		if (mistake.length() == 0) {
-		    // TODO: show instructions.
+		
+		if (hack.getText() == null || hack.getText().length() == 0) {
+		    Window.open("http://goo.gl/Ortds", "_blank", null);
 
 		    return;
 		}
@@ -58,15 +60,25 @@ public class Submit implements EntryPoint {
 		final TextBox textBox = new TextBox();
 		textBox.setWidth("90%");
 		textBox.setText(mistake);
+		
+		final HTML error = new HTML();
 
 		Button sendButton = new Button("Send");
 		sendButton.addClickHandler(new ClickHandler() {
 
 		    @Override
 		    public void onClick(ClickEvent event) {
-			if (textBox.getText().length() == 0 || textBox.getText().equals(hack.getText())) {
+			if (textBox.getText().length() == 0) {
+			    error.setHTML("<span style='color: red;'>Please enter a correction.</span>");
+			    
+			    return;
+			} else if (textBox.getText().equals(hack.getText())) {
+			    error.setHTML("<span style='color: red;'>Correction matches mistake. Please insert a valid correction.</span>");
+			    
 			    return;
 			}
+			
+			error.setHTML("Sending...");
 
 			XMLHttpRequest request = XMLHttpRequest.create();
 			request.open("POST", "http://bloki-engine.appspot.com/submit");
@@ -77,25 +89,7 @@ public class Submit implements EntryPoint {
 				dialog.hide();
 
 				if (xhr.getStatus() != 200 && xhr.getStatus() != 401) {
-				    final DialogBox box = new DialogBox();
-
-				    Button closeButton = new Button("Close");
-				    closeButton.addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-					    box.hide();
-					}
-				    });
-
-				    VerticalPanel panel = new VerticalPanel();
-				    panel.setWidth("100%");
-				    panel.add(new Label("I couldn't reach the server.\nAre you really connected to the internet?\nIf so, feel free to contact me about this error. :)"));
-				    panel.add(closeButton);
-
-				    box.add(panel);
-				    box.center();
-				    box.show();
+				    error.setHTML("<span style='color: red;'>I couldn't reach the server.\nAre you really connected to the internet?\nIf so, feel free to contact me about this error. :)</span>");
 				}
 			    }
 			});
@@ -129,6 +123,7 @@ public class Submit implements EntryPoint {
 		panel.setWidth("100%");
 		panel.add(label);
 		panel.add(textBox);
+		panel.add(error);
 		panel.add(buttonPanel);
 
 		dialog.add(panel);
@@ -140,13 +135,9 @@ public class Submit implements EntryPoint {
 	    }
 	});
 
-	getBody().appendChild(div);
+	RootPanel.getBodyElement().appendChild(div);
     }
-
-
-    private native Element getBody() /*-{
-    	return document.getElementsByTagName('body')[0];
-    }-*/;
+    
 
     /**
      * @author codetoad.com - http://www.codetoad.com/javascript_get_selected_text.asp
