@@ -1,6 +1,7 @@
 package at.tomtasche.bloki.engine.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -27,7 +28,7 @@ public class Submit implements EntryPoint {
     @Override
     public void onModuleLoad() {
 	Element div = DOM.createDiv();
-	div.setAttribute("style", "position:fixed; right:10px; bottom: 0; box-shadow: 0 0 10px #666; padding:10px; background-color:#333; color:#FFF; font-family: Arial;");
+	div.setAttribute("class", "bloki_div");
 	div.setInnerText("Blokchi - Fix typos");
 
 	Label.wrap(div).addMouseDownHandler(new MouseDownHandler() {
@@ -122,13 +123,9 @@ public class Submit implements EntryPoint {
 	    }
 	});
 
-	getBody().appendChild(div);
+	Document.get().getBody().appendChild(div);
     }
-
-
-    private native Element getBody() /*-{
-    	return document.getElementsByTagName('body')[0];
-    }-*/;
+    
 
     /**
      * @author codetoad.com - http://www.codetoad.com/javascript_get_selected_text.asp
