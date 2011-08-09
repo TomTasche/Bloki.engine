@@ -1,6 +1,5 @@
 package at.tomtasche.bloki.engine.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -36,7 +35,7 @@ public class SubmitServlet extends HttpServlet {
 	response.setHeader("Access-Control-Allow-Origin", "*");
 	response.setHeader("Access-Control-Allow-Methods", "POST");
 	response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type");
-	response.setHeader("Access-Control-Max-Age", "10"); //1728000
+	response.setHeader("Access-Control-Max-Age", "1728000");
     }
 
     @Override
@@ -44,21 +43,8 @@ public class SubmitServlet extends HttpServlet {
 	response.setHeader("Access-Control-Allow-Origin", "*");
 
 	InputStreamReader reader = new InputStreamReader(request.getInputStream());
-	BufferedReader buffReader = new BufferedReader(reader);
 
-	StringBuffer buffer = new StringBuffer();
-	for (String s = buffReader.readLine(); s != null; s = buffReader.readLine()) {
-	    buffer.append(s);
-	}
-
-	String json = buffer.toString();
-	
-	System.out.println(json);
-	
-	response.getWriter().println(json);
-	response.getWriter().println();
-	
-	BlokiPacket packet = new Gson().fromJson(json, BlokiPacket.class);
+	BlokiPacket packet = new Gson().fromJson(reader, BlokiPacket.class);
 	if (packet == null) return;
 
 	String body = buildMessage(packet);
@@ -116,7 +102,8 @@ public class SubmitServlet extends HttpServlet {
 
     private String buildMessage(BlokiPacket packet) {
 	String body = "<html>Hello,<p>One of your readers found the following mistake: '<b>" + packet.getMistake() + "</b>' <a href=\"" + packet.getUrl() + "\">on your blog</a>.<br />";
-	body += "He suggests to replace it with '<b>" + packet.getCorrection() + "</b>'.</p>Have a great, typo-free day,<br />Bloki Bot.</html>";
+	body += "He suggests to replace it with '<b>" + packet.getCorrection() + "</b>'.</p>Have a great, typo-free day,<br />Bloki Bot.";
+	body += "<p>PS: I would love to hear from you! If you have anything to say about Bloki, ping me at <a href='mailto:tomtasche+bloki@gmail.com'>tomtasche@gmail.com</a></p></html>";
 
 	return body;
     }
