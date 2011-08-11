@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -39,10 +40,10 @@ public class SubmitServlet extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	response.setHeader("Access-Control-Allow-Origin", "*");
 
-	InputStreamReader reader = new InputStreamReader(request.getInputStream());
+	InputStreamReader reader = new InputStreamReader(request.getInputStream(), Charset.forName("UTF-8"));
 
 	BlokiPacket packet = new Gson().fromJson(reader, BlokiPacket.class);
 	if (packet == null) return;

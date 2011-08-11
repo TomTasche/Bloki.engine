@@ -1,4 +1,4 @@
-bloki_div {
+.bloki_div {
 	position: fixed;
 	right: 10px;
 	bottom: 0;
@@ -7,4 +7,8 @@ bloki_div {
 	background-color: #333;
 	color: #FFF;
 	font-family: Arial;
+}
+
+.bloki_div:before {
+	content: "Bloki - Fix typos";
 }

@@ -29,7 +29,6 @@ public class Submit implements EntryPoint {
     public void onModuleLoad() {
 	Element div = DOM.createDiv();
 	div.setAttribute("class", "bloki_div");
-	div.setInnerText("Blokchi - Fix typos");
 
 	Label.wrap(div).addMouseDownHandler(new MouseDownHandler() {
 	    
