@@ -1,0 +1,10 @@
+.bloki_div {
+	width: 68px;
+	height: 179px;
+	background-image: url(http://www.quickticket.at/img/ribbon.png);
+	background-repeat: no-repeat;
+	position: absolute;
+	left: 80%;
+	top: 0px;
+	display: block;
+}
