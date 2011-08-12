@@ -2,6 +2,8 @@ package at.tomtasche.bloki.engine.server;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import at.tomtasche.bloki.engine.client.RegisterService;
 
@@ -24,26 +26,44 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 	try {
 	    url = new URL(urlString);
 	} catch (MalformedURLException e) {
-	    return "Couldn't parse your URL: '" + urlString + "'.";
+	    urlString = "http://" + urlString;
+
+	    try {
+		url = new URL(urlString);
+	    } catch (MalformedURLException e1) {
+		return "Couldn't parse your URL: '" + urlString + "'.";
+	    }
 	}
 
-	if (!mail.contains("@")) {
+	if (!isValidEmailAddress(mail)) {
 	    return "Couldn't parse your mail: '" + mail + "'.";
 	}
-	
-	createCustomer(urlString, mail);
 
-	return "Welcome, <a href='" + url.toString() + "'>" + url.getHost() + "</a>. Thank you very much for signing up for Bloki. I can't wait to hear what you think...<br />Now head over to the <a href='http://goo.gl/a2BNp'>instructions on how to install Bloki on your blog</a>.";
+	createCustomer(url.getHost(), mail);
+
+	return "Welcome, <a href='http://" + url.getHost() + "/'>" + url.getHost() + "</a>. Thank you very much for signing up for Bloki. I can't wait to hear what you think...<br />Now head over to the <a href='http://goo.gl/PUYGd'>instructions on how to install Bloki on your blog</a>.";
     }
-    
-    
+
+
     private void createCustomer(String url, String mail) {
 	ObjectifyService.register(Customer.class);
 	Objectify objectify = ObjectifyService.begin();
-	
+
 	Customer customer = new Customer(url, mail);
-	
+
 	objectify.put(customer);
+    }
+
+    /**
+     * @author Dominic Bartl - http://bartinger.at/
+     * @param mail
+     * @return
+     */
+    private boolean isValidEmailAddress(String mail){  
+	String expression = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+	Pattern pattern = Pattern.compile(expression,Pattern.CASE_INSENSITIVE);  
+	Matcher matcher = pattern.matcher(mail);  
+	return matcher.matches();  
     }
 
     /**
