@@ -21,6 +21,7 @@
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
+  <source path='shared'/>
 
   <!-- Cross-site JS -->
   <add-linker name="xs" />

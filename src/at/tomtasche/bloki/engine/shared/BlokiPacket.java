@@ -1,4 +1,4 @@
-package at.tomtasche.bloki.engine.server;
+package at.tomtasche.bloki.engine.shared;
 
 public class BlokiPacket {
 
