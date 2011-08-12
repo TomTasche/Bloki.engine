@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class CorrectionDialog extends DialogBox implements ClickHandler, BlokiPacketCallback {
@@ -23,7 +23,7 @@ public class CorrectionDialog extends DialogBox implements ClickHandler, BlokiPa
     // ... so we're storing it in a invisible label. ;)
     // TODO: find this problem's cause, please.
     Label mistakeLabel;
-    TextBox correctionBox;
+    TextArea correctionArea;
     HTML statusLabel;
     CorrectionVerifier verifier;
     BlokiPacketSender sender;
@@ -41,11 +41,11 @@ public class CorrectionDialog extends DialogBox implements ClickHandler, BlokiPa
 	this.setAnimationEnabled(true);
 
 	HTML label = new HTML("What should '<b>" + mistake + "</b>' read like instead?");
-	correctionBox = new TextBox();
-	correctionBox.setWidth("90%");
-	correctionBox.setText(mistake);
-	correctionBox.setFocus(true);
-	correctionBox.selectAll();
+	correctionArea = new TextArea();
+	correctionArea.setWidth("90%");
+	correctionArea.setText(mistake);
+	correctionArea.setFocus(true);
+	correctionArea.selectAll();
 
 	statusLabel = new HTML();
 
@@ -54,7 +54,7 @@ public class CorrectionDialog extends DialogBox implements ClickHandler, BlokiPa
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		String status = verifier.verify(mistakeLabel.getText(), correctionBox.getText());
+		String status = verifier.verify(mistakeLabel.getText(), correctionArea.getText());
 		if (status != null) {
 		    statusLabel.setHTML(status);
 
@@ -64,7 +64,7 @@ public class CorrectionDialog extends DialogBox implements ClickHandler, BlokiPa
 		}
 
 		String mistake = mistakeLabel.getText();
-		String correction = correctionBox.getText();
+		String correction = correctionArea.getText();
 		String url = Window.Location.getHref();
 
 		sender.send(mistake, correction, url);
@@ -84,7 +84,7 @@ public class CorrectionDialog extends DialogBox implements ClickHandler, BlokiPa
 	VerticalPanel panel = new VerticalPanel();
 	panel.setWidth("100%");
 	panel.add(label);
-	panel.add(correctionBox);
+	panel.add(correctionArea);
 	panel.add(statusLabel);
 	panel.add(buttonPanel);
 
