@@ -16761,6 +16761,7 @@ Public resources found in...
 Translatable source found in...
 Removing invalidated units
 Finding entry point classes
+<<<<<<< HEAD
 Module location: jar:file:/home/tom/Programme/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r37v201106211634/gwt-2.3.0/gwt-user.jar!/com/google/gwt/user/User.gwt.xml
 Loading inherited module 'com.google.gwt.canvas.Canvas'
    Module location: jar:file:/home/tom/Programme/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.3.0.r37v201106211634/gwt-2.3.0/gwt-user.jar!/com/google/gwt/canvas/Canvas.gwt.xml
@@ -17628,3 +17629,5 @@ Public resources found in...
 Translatable source found in...
 Removing invalidated units
 Finding entry point classes
+=======
+>>>>>>> 8ac6c80d3fb701dd8300f786e15e1c9d05750253
