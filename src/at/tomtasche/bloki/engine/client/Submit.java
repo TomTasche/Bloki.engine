@@ -26,7 +26,7 @@ public class Submit implements EntryPoint, MouseDownHandler {
 		
 		Element bloki_center = DOM.createDiv();
 		bloki_center.setAttribute("class", "bloki_center");
-		bloki_center.setInnerText("Bloki - Fix misspellings");
+		bloki_center.setInnerText("suggest correction");
 		
 		Element bloki_right = DOM.createDiv();
 		bloki_right.setAttribute("class", "bloki_right");
