@@ -16,48 +16,60 @@ import com.google.gwt.user.client.ui.Label;
  */
 public class Submit implements EntryPoint, MouseDownHandler {
 
-    @Override
-    public void onModuleLoad() {
-	Element div = DOM.createDiv();
-	div.setAttribute("class", "bloki_div");
+	@Override
+	public void onModuleLoad() {
+		Element bloki_div = DOM.createDiv();
+		bloki_div.setAttribute("class", "bloki_div");
 
-	Label.wrap(div).addMouseDownHandler(this);
+		Element bloki_left = DOM.createDiv();
+		bloki_left.setAttribute("class", "bloki_left");
+		Element bloki_center = DOM.createDiv();
+		bloki_center.setAttribute("class", "bloki_center");
+		bloki_center.setInnerText("Bloki - Fix missspellings");
+		Element bloki_right = DOM.createDiv();
+		bloki_right.setAttribute("class", "bloki_right");
 
-	Document.get().getBody().appendChild(div);
-    }
-    
-    @Override
-    public void onMouseDown(MouseDownEvent event) {
-	String mistake = getSelectedText();
-	Label mistakeLabel = new Label(mistake);
+		bloki_div.appendChild(bloki_left);
+		bloki_div.appendChild(bloki_center);
+		bloki_div.appendChild(bloki_right);
 
-	if (mistakeLabel.getText() == null || mistakeLabel.getText().trim().length() == 0) {
-	    // Window.open("http://goo.gl/Ortds", "_blank", null);
-	    
-	    new InstructionsDialog().show();
+		Label.wrap(bloki_div).addMouseDownHandler(this);
 
-	    return;
+		Document.get().getBody().appendChild(bloki_div);
 	}
 
-	new CorrectionDialog(mistake).show();
-    }
+	@Override
+	public final void onMouseDown(final MouseDownEvent event) {
+		String mistake = getSelectedText();
+		Label mistakeLabel = new Label(mistake);
 
+		if (mistakeLabel.getText() == null || mistakeLabel.getText().trim().length() == 0) {
+			// Window.open("http://goo.gl/Ortds", "_blank", null);
 
-    /**
-     * @author codetoad.com - http://www.codetoad.com/javascript_get_selected_text.asp
-     * @returns {String}
-     */
-    private native String getSelectedText() /*-{
-	var text = '';
+			new InstructionsDialog().show();
 
-	if (window.getSelection) {
-		text = window.getSelection();
-	} else if (document.getSelection) {
-		text = document.getSelection();
-	} else if (document.selection) {
-		text = document.selection.createRange().text;
+			return;
+		}
+
+		new CorrectionDialog(mistake).show();
 	}
 
-	return text;
+
+	/**
+	 * @author codetoad.com - http://www.codetoad.com/javascript_get_selected_text.asp
+	 * @returns {String}
+	 */
+	private native String getSelectedText() /*-{
+		var text = '';
+	
+		if (window.getSelection) {
+			text = window.getSelection();
+		} else if (document.getSelection) {
+			text = document.getSelection();
+		} else if (document.selection) {
+			text = document.selection.createRange().text;
+		}
+	
+		return text;
     }-*/;
 }

@@ -1,0 +1,12 @@
+@import url('../../submit/gwt/chrome/chrome.css');
+
+.bloki_div {
+	position: fixed;
+	right: 10px;
+	bottom: 0;
+	box-shadow: 0 0 10px #666;
+	padding: 10px;
+	background-color: #333;
+	color: #FFF;
+	font-family: Arial;
+}
