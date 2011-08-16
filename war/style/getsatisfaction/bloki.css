@@ -1,0 +1,17 @@
+@import url('../../submit/gwt/chrome/chrome.css');
+
+.bloki_div {
+	width: 34px;
+	height: 179px;
+	position: fixed;
+	left: 0px;
+	top: 50px;
+	box-shadow: 0 0 10px #666;
+	background-image: url('button.png');
+	background-repeat: no-repeat;
+	text-indent: -999em;
+}
+
+.bloki_div .bloki_center {
+	text-indent: -999em;
+}
