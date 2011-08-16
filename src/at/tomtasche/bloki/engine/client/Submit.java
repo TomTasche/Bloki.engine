@@ -23,11 +23,11 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 		Element bloki_left = DOM.createDiv();
 		bloki_left.setAttribute("class", "bloki_left");
-		
+
 		Element bloki_center = DOM.createDiv();
 		bloki_center.setAttribute("class", "bloki_center");
 		bloki_center.setInnerText("suggest correction");
-		
+
 		Element bloki_right = DOM.createDiv();
 		bloki_right.setAttribute("class", "bloki_right");
 
@@ -45,7 +45,8 @@ public class Submit implements EntryPoint, MouseDownHandler {
 		String mistake = getSelectedText();
 		Label mistakeLabel = new Label(mistake);
 
-		if (mistakeLabel.getText() == null || mistakeLabel.getText().trim().length() == 0) {
+		if (mistakeLabel.getText() == null
+				|| mistakeLabel.getText().trim().length() == 0) {
 			// Window.open("http://goo.gl/Ortds", "_blank", null);
 
 			new InstructionsDialog().show();
@@ -56,22 +57,22 @@ public class Submit implements EntryPoint, MouseDownHandler {
 		new CorrectionDialog(mistake).show();
 	}
 
-
 	/**
-	 * @author codetoad.com - http://www.codetoad.com/javascript_get_selected_text.asp
+	 * @author codetoad.com -
+	 *         http://www.codetoad.com/javascript_get_selected_text.asp
 	 * @returns {String}
 	 */
 	private native String getSelectedText() /*-{
 		var text = '';
-	
+		
 		if (window.getSelection) {
-			text = window.getSelection();
+		text = window.getSelection();
 		} else if (document.getSelection) {
-			text = document.getSelection();
+		text = document.getSelection();
 		} else if (document.selection) {
-			text = document.selection.createRange().text;
+		text = document.selection.createRange().text;
 		}
-	
+		
 		return text;
-    }-*/;
+	}-*/;
 }
