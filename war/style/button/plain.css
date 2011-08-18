@@ -1,16 +1,20 @@
-@import url('http://bloki-engine.appspot.com/submit/gwt/chrome/chrome.css');
+@import
+	url('http://bloki-engine.appspot.com/submit/gwt/chrome/chrome.css');
 
 .bloki_div {
 	width: 160px;
 	height: 35px;
-	background-image: url('http://bloki-engine.appspot.com/img/bloki_button.png');
+	background-image:
+		url('http://bloki-engine.appspot.com/img/bloki_button.png');
 	background-repeat: no-repeat;
 	background-position: top left;
 	position: absolute;
 	right: 350px;
 	bottom: 0px;
-	}
+}
+
 .bloki_div:hover {
-	background-image: url('http://bloki-engine.appspot.com/img/bloki_button_pressed.png');
+	background-image:
+		url('http://bloki-engine.appspot.com/img/bloki_button_pressed.png');
 	cursor: pointer;
-	}
+}

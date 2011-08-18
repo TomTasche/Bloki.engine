@@ -1,15 +1,17 @@
-@import url('http://bloki-engine.appspot.com/submit/gwt/chrome/chrome.css');
+@import
+	url('http://bloki-engine.appspot.com/submit/gwt/chrome/chrome.css');
 
 .bloki_div {
-		width: 35px;
+	width: 35px;
 	height: 160px;
-	background-image: url('http://bloki-engine.appspot.com/img/bloki_getsatisfaction_vertical_black.png');
+	background-image:
+		url('http://bloki-engine.appspot.com/img/bloki_getsatisfaction_vertical_black.png');
 	background-repeat: no-repeat;
 	background-position: top left;
 	position: absolute;
 	top: 300px;
 	left: 0px;
-	}
+}
 
 .bloki_div:hover {
 	cursor: pointer;
