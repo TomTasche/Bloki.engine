@@ -1,0 +1,17 @@
+@import url('http://bloki-engine.appspot.com/submit/gwt/chrome/chrome.css');
+
+.bloki_div {
+	width: 180px;
+	height: 45px;
+	background-image: url('http://bloki-engine.appspot.com/img/bloki_ribbon_horizontal_red.png');
+	background-repeat: no-repeat;
+	background-position: center right;
+	position: absolute;
+	top: 100px;
+	left: 0px;
+	}
+
+.bloki_div:hover {
+	width: 190px;
+	cursor: pointer;
+	}

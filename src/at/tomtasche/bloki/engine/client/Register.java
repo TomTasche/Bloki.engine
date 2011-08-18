@@ -11,6 +11,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -38,6 +39,7 @@ public class Register implements EntryPoint {
 	/**
 	 * This is the entry point method.
 	 */
+	@Override
 	public void onModuleLoad() {
 		final Button sendButton = new Button("Register");
 		final TextBox urlField = new TextBox();
@@ -69,19 +71,20 @@ public class Register implements EntryPoint {
 		closeButton.getElement().setId("closeButton");
 		final Label textToServerLabel = new Label();
 		final HTML serverResponseLabel = new HTML();
-		VerticalPanel dialogVPanel = new VerticalPanel();
+		final VerticalPanel dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
 		dialogVPanel.add(new HTML("<b>Sending credentials to the server:</b>"));
 		dialogVPanel.add(textToServerLabel);
 		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
 		dialogVPanel.add(serverResponseLabel);
-		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		dialogVPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		dialogVPanel.add(closeButton);
 		dialogBox.setWidget(dialogVPanel);
 
 		// Add a handler to close the DialogBox
 		closeButton.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+			@Override
+			public void onClick(final ClickEvent event) {
 				dialogBox.hide();
 				sendButton.setEnabled(true);
 				sendButton.setFocus(true);
@@ -93,16 +96,18 @@ public class Register implements EntryPoint {
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
-			public void onClick(ClickEvent event) {
-				sendNameToServer();
+			@Override
+			public void onClick(final ClickEvent event) {
+				this.sendNameToServer();
 			}
 
 			/**
 			 * Fired when the user types in the nameField.
 			 */
-			public void onKeyUp(KeyUpEvent event) {
+			@Override
+			public void onKeyUp(final KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
+					this.sendNameToServer();
 				}
 			}
 
@@ -113,28 +118,30 @@ public class Register implements EntryPoint {
 			private void sendNameToServer() {
 				// First, we validate the input.
 				errorLabel.setText("");
-				String url = urlField.getText();
-				String mail = mailField.getText();
+				final String url = urlField.getText();
+				final String mail = mailField.getText();
 
 				// Then, we send the input to the server.
 				sendButton.setEnabled(false);
 				textToServerLabel.setText(url + " and " + mail);
 				serverResponseLabel.setText("");
-				registerService.register(url, mail,
+				Register.this.registerService.register(url, mail,
 						new AsyncCallback<String>() {
-							public void onFailure(Throwable caught) {
+							@Override
+							public void onFailure(final Throwable caught) {
 								// Show the RPC error message to the user
 								dialogBox.setText("Registration - Failure");
 								serverResponseLabel
 										.addStyleName("serverResponseLabelError");
 								serverResponseLabel
-										.setHTML(SERVER_ERROR
+										.setHTML(Register.SERVER_ERROR
 												+ "<p>Please send me a mail to <a href='mailto:tomtasche%40gmail.com'>tomtasche@gmail.com</a> so I can find this issue's cause.</p>");
 								dialogBox.center();
 								closeButton.setFocus(true);
 							}
 
-							public void onSuccess(String result) {
+							@Override
+							public void onSuccess(final String result) {
 								dialogBox.setText("Registration - Success");
 								serverResponseLabel
 										.removeStyleName("serverResponseLabelError");
@@ -147,7 +154,7 @@ public class Register implements EntryPoint {
 		}
 
 		// Add a handler to send the name to the server
-		MyHandler handler = new MyHandler();
+		final MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
 		urlField.addKeyUpHandler(handler);
 		mailField.addKeyUpHandler(handler);

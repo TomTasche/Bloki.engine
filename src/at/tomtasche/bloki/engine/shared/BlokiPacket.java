@@ -11,21 +11,22 @@ public class BlokiPacket {
 	BlokiPacket() {
 	}
 
-	public BlokiPacket(String mistake, String correction, String url) {
+	public BlokiPacket(final String mistake, final String correction,
+			final String url) {
 		this.mistake = mistake;
 		this.correction = correction;
 		this.url = url;
 	}
 
 	public String getMistake() {
-		return mistake;
+		return this.mistake;
 	}
 
 	public String getCorrection() {
-		return correction;
+		return this.correction;
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 }

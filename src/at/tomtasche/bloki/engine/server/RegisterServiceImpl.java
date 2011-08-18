@@ -18,31 +18,32 @@ import com.googlecode.objectify.ObjectifyService;
 public class RegisterServiceImpl extends RemoteServiceServlet implements
 		RegisterService {
 
+	@Override
 	public String register(String urlString, String mail)
 			throws IllegalArgumentException {
 		// Escape data from the client to avoid cross-site script
 		// vulnerabilities.
-		urlString = escapeHtml(urlString);
-		mail = escapeHtml(mail);
+		urlString = this.escapeHtml(urlString);
+		mail = this.escapeHtml(mail);
 
 		URL url;
 		try {
 			url = new URL(urlString);
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			urlString = "http://" + urlString;
 
 			try {
 				url = new URL(urlString);
-			} catch (MalformedURLException e1) {
+			} catch (final MalformedURLException e1) {
 				return "Couldn't parse your URL: '" + urlString + "'.";
 			}
 		}
 
-		if (!isValidEmailAddress(mail)) {
+		if (!this.isValidEmailAddress(mail)) {
 			return "Couldn't parse your mail: '" + mail + "'.";
 		}
 
-		createCustomer(url.getHost(), mail);
+		this.createCustomer(url.getHost(), mail);
 
 		return "Welcome, <a href='http://"
 				+ url.getHost()
@@ -51,11 +52,11 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 				+ "</a>. Thank you very much for signing up for Bloki. I can't wait to hear what you think...<br />Now head over to the <a href='http://goo.gl/PUYGd'>instructions on how to install Bloki on your blog</a>.";
 	}
 
-	private void createCustomer(String url, String mail) {
+	private void createCustomer(final String url, final String mail) {
 		ObjectifyService.register(Customer.class);
-		Objectify objectify = ObjectifyService.begin();
+		final Objectify objectify = ObjectifyService.begin();
 
-		Customer customer = new Customer(url, mail);
+		final Customer customer = new Customer(url, mail);
 
 		objectify.put(customer);
 	}
@@ -65,10 +66,11 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 	 * @param mail
 	 * @return
 	 */
-	private boolean isValidEmailAddress(String mail) {
-		String expression = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-		Matcher matcher = pattern.matcher(mail);
+	private boolean isValidEmailAddress(final String mail) {
+		final String expression = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+		final Pattern pattern = Pattern.compile(expression,
+				Pattern.CASE_INSENSITIVE);
+		final Matcher matcher = pattern.matcher(mail);
 		return matcher.matches();
 	}
 
@@ -80,7 +82,7 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 	 *            the html string to escape
 	 * @return the escaped string
 	 */
-	private String escapeHtml(String html) {
+	private String escapeHtml(final String html) {
 		if (html == null) {
 			return null;
 		}

@@ -12,16 +12,16 @@ public class Customer {
 	Customer() {
 	}
 
-	public Customer(String url, String mail) {
+	public Customer(final String url, final String mail) {
 		this.url = url;
 		this.mail = mail;
 	}
 
 	public String getMail() {
-		return mail;
+		return this.mail;
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 }

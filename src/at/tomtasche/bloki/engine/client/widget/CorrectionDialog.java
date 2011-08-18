@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
@@ -32,67 +33,70 @@ public class CorrectionDialog extends DialogBox implements ClickHandler,
 	CorrectionVerifier verifier;
 	BlokiPacketSender sender;
 
-	public CorrectionDialog(String mistake) {
+	public CorrectionDialog(final String mistake) {
 		super(true);
 
-		sender = new BlokiPacketSender(this);
-		verifier = new CorrectionVerifier();
-		mistakeLabel = new Label(mistake);
+		this.sender = new BlokiPacketSender(this);
+		this.verifier = new CorrectionVerifier();
+		this.mistakeLabel = new Label(mistake);
 
 		this.setTitle("Bloki - Crowdsourced typo fixjng");
 		this.setText("Bloki - Crowdsourced typo fixjng");
 		this.setAnimationEnabled(true);
 
-		HTML label = new HTML("What should '<b>" + mistake
+		final HTML label = new HTML("What should '<b>" + mistake
 				+ "</b>' read like instead?");
-		correctionArea = new TextArea();
-		correctionArea.setWidth("90%");
-		correctionArea.setText(mistake);
-		correctionArea.setFocus(true);
-		correctionArea.selectAll();
+		this.correctionArea = new TextArea();
+		this.correctionArea.setWidth("90%");
+		this.correctionArea.setText(mistake);
+		this.correctionArea.setFocus(true);
+		this.correctionArea.selectAll();
 
-		statusLabel = new HTML();
+		this.statusLabel = new HTML();
 
-		Button sendButton = new Button("Send");
+		final Button sendButton = new Button("Send");
 		sendButton.addClickHandler(new ClickHandler() {
 
 			@Override
-			public void onClick(ClickEvent event) {
-				String status = verifier.verify(mistakeLabel.getText(),
-						correctionArea.getText());
+			public void onClick(final ClickEvent event) {
+				final String status = CorrectionDialog.this.verifier.verify(
+						CorrectionDialog.this.mistakeLabel.getText(),
+						CorrectionDialog.this.correctionArea.getText());
 				if (status != null) {
-					statusLabel.setHTML(status);
+					CorrectionDialog.this.statusLabel.setHTML(status);
 
 					return;
 				} else {
-					statusLabel.setHTML("Sending...");
+					CorrectionDialog.this.statusLabel.setHTML("Sending...");
 				}
 
-				String mistake = mistakeLabel.getText();
-				String correction = correctionArea.getText();
-				String url = Window.Location.getHref();
+				final String mistake = CorrectionDialog.this.mistakeLabel
+						.getText();
+				final String correction = CorrectionDialog.this.correctionArea
+						.getText();
+				final String url = Window.Location.getHref();
 
-				sender.send(mistake, correction, url);
+				CorrectionDialog.this.sender.send(mistake, correction, url);
 			}
 		});
 
-		Button closeButton = new Button("Close");
+		final Button closeButton = new Button("Close");
 		closeButton.addClickHandler(this);
 
-		HorizontalPanel buttonPanel = new HorizontalPanel();
+		final HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.setWidth("100%");
 		buttonPanel.add(closeButton);
 		buttonPanel.add(sendButton);
 		buttonPanel.setCellHorizontalAlignment(closeButton,
-				HorizontalPanel.ALIGN_LEFT);
+				HasHorizontalAlignment.ALIGN_LEFT);
 		buttonPanel.setCellHorizontalAlignment(sendButton,
-				HorizontalPanel.ALIGN_RIGHT);
+				HasHorizontalAlignment.ALIGN_RIGHT);
 
-		VerticalPanel panel = new VerticalPanel();
+		final VerticalPanel panel = new VerticalPanel();
 		panel.setWidth("100%");
 		panel.add(label);
-		panel.add(correctionArea);
-		panel.add(statusLabel);
+		panel.add(this.correctionArea);
+		panel.add(this.statusLabel);
 		panel.add(buttonPanel);
 
 		this.add(panel);
@@ -100,13 +104,13 @@ public class CorrectionDialog extends DialogBox implements ClickHandler,
 	}
 
 	@Override
-	public void onClick(ClickEvent event) {
+	public void onClick(final ClickEvent event) {
 		this.hide();
 	}
 
 	@Override
 	public void onError() {
-		statusLabel
+		this.statusLabel
 				.setHTML("<span style='color: red;'>I couldn't reach the server.\nAre you really connected to the internet?\nIf so, feel free to contact me about this error. :)</span>");
 	}
 

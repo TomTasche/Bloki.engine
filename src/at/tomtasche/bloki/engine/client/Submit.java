@@ -18,17 +18,16 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 	@Override
 	public void onModuleLoad() {
-		Element bloki_div = DOM.createDiv();
+		final Element bloki_div = DOM.createDiv();
 		bloki_div.setAttribute("class", "bloki_div");
 
-		Element bloki_left = DOM.createDiv();
+		final Element bloki_left = DOM.createDiv();
 		bloki_left.setAttribute("class", "bloki_left");
 
-		Element bloki_center = DOM.createDiv();
+		final Element bloki_center = DOM.createDiv();
 		bloki_center.setAttribute("class", "bloki_center");
-		bloki_center.setInnerText("suggest correction");
 
-		Element bloki_right = DOM.createDiv();
+		final Element bloki_right = DOM.createDiv();
 		bloki_right.setAttribute("class", "bloki_right");
 
 		bloki_div.appendChild(bloki_left);
@@ -42,8 +41,8 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 	@Override
 	public final void onMouseDown(final MouseDownEvent event) {
-		String mistake = getSelectedText();
-		Label mistakeLabel = new Label(mistake);
+		final String mistake = this.getSelectedText();
+		final Label mistakeLabel = new Label(mistake);
 
 		if (mistakeLabel.getText() == null
 				|| mistakeLabel.getText().trim().length() == 0) {
@@ -66,11 +65,11 @@ public class Submit implements EntryPoint, MouseDownHandler {
 		var text = '';
 		
 		if (window.getSelection) {
-		text = window.getSelection();
+			text = window.getSelection();
 		} else if (document.getSelection) {
-		text = document.getSelection();
+			text = document.getSelection();
 		} else if (document.selection) {
-		text = document.selection.createRange().text;
+			text = document.selection.createRange().text;
 		}
 		
 		return text;

@@ -29,14 +29,15 @@ import com.googlecode.objectify.ObjectifyService;
 public class SubmitServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void doGet(final HttpServletRequest request,
+			final HttpServletResponse response) throws IOException {
 		response.sendError(HttpServletResponse.SC_FORBIDDEN);
 	}
 
 	@Override
-	protected void doOptions(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doOptions(final HttpServletRequest request,
+			final HttpServletResponse response) throws ServletException,
+			IOException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST");
 		response.setHeader("Access-Control-Allow-Headers",
@@ -45,35 +46,37 @@ public class SubmitServlet extends HttpServlet {
 	}
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doPost(final HttpServletRequest request,
+			final HttpServletResponse response) throws ServletException,
+			IOException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 
-		InputStreamReader reader = new InputStreamReader(
+		final InputStreamReader reader = new InputStreamReader(
 				request.getInputStream(), Charset.forName("UTF-8"));
-		BlokiPacket packet = new Gson().fromJson(reader, BlokiPacket.class);
+		final BlokiPacket packet = new Gson().fromJson(reader,
+				BlokiPacket.class);
 		if (packet == null)
 			return;
 
-		String body = buildMessage(packet);
+		final String body = this.buildMessage(packet);
 
 		try {
-			Customer customer = getCustomer(packet);
+			Customer customer = this.getCustomer(packet);
 			if (customer == null) {
 				customer = new Customer(new URL(packet.getUrl()).getHost(),
 						"tomtasche+bloki-engine@gmail.com");
 
-				sendMail(customer, packet, body);
+				this.sendMail(customer, packet, body);
 
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
 				return;
 			}
 
-			sendMail(customer, packet, body);
+			this.sendMail(customer, packet, body);
 
 			response.setStatus(HttpServletResponse.SC_OK);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
@@ -85,25 +88,25 @@ public class SubmitServlet extends HttpServlet {
 		}
 	}
 
-	private Customer getCustomer(BlokiPacket packet)
+	private Customer getCustomer(final BlokiPacket packet)
 			throws MalformedURLException {
 		ObjectifyService.register(Customer.class);
-		Objectify objectify = ObjectifyService.begin();
+		final Objectify objectify = ObjectifyService.begin();
 
-		String url = new URL(packet.getUrl()).getHost();
+		final String url = new URL(packet.getUrl()).getHost();
 
 		return objectify.query(Customer.class).filter("url", url).get();
 	}
 
-	private void sendMail(Customer customer, BlokiPacket packet, String body)
-			throws UnsupportedEncodingException, MessagingException,
-			MalformedURLException {
-		URL url = new URL(packet.getUrl());
+	private void sendMail(final Customer customer, final BlokiPacket packet,
+			final String body) throws UnsupportedEncodingException,
+			MessagingException, MalformedURLException {
+		final URL url = new URL(packet.getUrl());
 
-		Properties props = new Properties();
-		Session session = Session.getDefaultInstance(props, null);
+		final Properties props = new Properties();
+		final Session session = Session.getDefaultInstance(props, null);
 
-		MimeMessage message = new MimeMessage(session);
+		final MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(url.getHost()
 				+ "@bloki-engine.appspotmail.com", "Bloki Bot"));
 
@@ -117,7 +120,7 @@ public class SubmitServlet extends HttpServlet {
 		Transport.send(message);
 	}
 
-	private String buildMessage(BlokiPacket packet) {
+	private String buildMessage(final BlokiPacket packet) {
 		String body = "<html>Hello,<p>One of your readers found the following mistake: '<b>"
 				+ packet.getMistake()
 				+ "</b>' <a href=\""
