@@ -8,7 +8,7 @@
 		url('http://bloki-engine.appspot.com/img/bloki_ribbon_horizontal_red.png');
 	background-repeat: no-repeat;
 	background-position: center right;
-	position: absolute;
+	position: fixed;
 	top: 100px;
 	left: 0px;
 }

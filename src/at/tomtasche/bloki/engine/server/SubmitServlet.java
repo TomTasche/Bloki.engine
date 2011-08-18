@@ -126,9 +126,18 @@ public class SubmitServlet extends HttpServlet {
 				+ "</b>' <a href=\""
 				+ packet.getUrl()
 				+ "\">on your blog</a>.<br />";
-		body += "He suggests to replace it with '<b>" + packet.getCorrection()
-				+ "</b>'.</p>Have a great, typo-free day,<br />Bloki Bot.";
-		body += "<p>PS: I would love to hear from you! If you have anything to say about Bloki, ping me at <a href='mailto:tomtasche+bloki@gmail.com'>tomtasche@gmail.com</a></p></html>";
+		body += "He suggests to replace it with '<b>"
+				+ packet.getCorrection()
+				+ "</b>'.</p>Have a great, typo-free day,<br /><a href='http://goo.gl/dK84V'>Tom</a> and your Bloki Bot.";
+		body += "<p>PS: I would love to hear from you! If you have anything to say about Bloki, ping me at <a href='mailto:tomtasche+bloki@gmail.com'>tomtasche@gmail.com</a></p>";
+
+		if (packet.getContext() != null && packet.getContext().trim().isEmpty()) {
+			body += "<p>PPS: That's what we guess is the mistake's enclosing text: <p><i>"
+					+ packet.getContext()
+					+ "</i></p>Please don't think that's correct for sure! It's just a guess...</p>";
+		}
+
+		body += "</html>";
 
 		return body;
 	}

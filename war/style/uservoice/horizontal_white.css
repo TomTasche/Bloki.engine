@@ -8,8 +8,8 @@
 		url('http://bloki-engine.appspot.com/img/bloki_uservoice_horizontal_white.png');
 	background-repeat: no-repeat;
 	background-position: top left;
-	position: absolute;
-	right: 100px;
+	position: fixed;
+	right: 10px;
 	bottom: 0px;
 }
 

@@ -6,6 +6,8 @@ import at.tomtasche.bloki.engine.client.widget.InstructionsDialog;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -57,6 +59,7 @@ public class Submit implements EntryPoint, MouseDownHandler {
 	@Override
 	public final void onMouseDown(final MouseDownEvent event) {
 		final String mistake = this.getSelectedText();
+		final String context = this.getSelectionContext();
 		final Label mistakeLabel = new Label(mistake);
 
 		if (mistakeLabel.getText() == null
@@ -68,7 +71,7 @@ public class Submit implements EntryPoint, MouseDownHandler {
 			return;
 		}
 
-		new CorrectionDialog(mistake).show();
+		new CorrectionDialog(mistake, context).show();
 	}
 
 	/**
@@ -89,4 +92,25 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 											return text;
 											}-*/;
+
+	private String getSelectionContext() {
+		if (this.lastSelect == null)
+			return "";
+
+		final NodeList<Node> nodes = this.lastSelect.getChildNodes();
+		final StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < nodes.getLength(); i++) {
+			if (nodes.getItem(i).getNodeValue() == null
+					|| nodes.getItem(i).getNodeValue().trim().isEmpty())
+				continue;
+
+			if (i == 0) {
+				builder.append("<b>" + nodes.getItem(i).getNodeValue() + "</b>");
+			} else {
+				builder.append(nodes.getItem(i).getNodeValue());
+			}
+		}
+
+		return builder.toString();
+	}
 }

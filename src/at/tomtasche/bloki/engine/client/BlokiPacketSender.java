@@ -16,8 +16,8 @@ public class BlokiPacketSender {
 	}
 
 	public void send(final String mistake, final String correction,
-			final String url) {
-		this.send(new BlokiPacket(mistake, correction, url));
+			final String context, final String url) {
+		this.send(new BlokiPacket(mistake, correction, context, url));
 	}
 
 	public void send(final BlokiPacket packet) {
@@ -38,6 +38,7 @@ public class BlokiPacketSender {
 		final JSONObject object = new JSONObject();
 		object.put("mistake", new JSONString(packet.getMistake()));
 		object.put("correction", new JSONString(packet.getCorrection()));
+		object.put("context", new JSONString(packet.getContext()));
 		object.put("url", new JSONString(packet.getUrl()));
 
 		request.send(object.toString());

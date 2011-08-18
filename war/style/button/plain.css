@@ -8,7 +8,7 @@
 		url('http://bloki-engine.appspot.com/img/bloki_button.png');
 	background-repeat: no-repeat;
 	background-position: top left;
-	position: absolute;
+	position: fixed;
 	right: 350px;
 	bottom: 0px;
 }

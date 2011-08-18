@@ -3,6 +3,7 @@ package at.tomtasche.bloki.engine.client.widget;
 import at.tomtasche.bloki.engine.client.BlokiPacketSender;
 import at.tomtasche.bloki.engine.client.BlokiPacketSender.BlokiPacketCallback;
 import at.tomtasche.bloki.engine.client.CorrectionVerifier;
+import at.tomtasche.bloki.engine.shared.BlokiPacket;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -12,7 +13,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -27,18 +27,18 @@ public class CorrectionDialog extends DialogBox implements ClickHandler,
 	// also, checking mistake for its length doesnt work either
 	// ... so we're storing it in a invisible label. ;)
 	// TODO: find this problem's cause, please.
-	Label mistakeLabel;
+	BlokiPacket packet;
 	TextArea correctionArea;
 	HTML statusLabel;
 	CorrectionVerifier verifier;
 	BlokiPacketSender sender;
 
-	public CorrectionDialog(final String mistake) {
+	public CorrectionDialog(final String mistake, final String context) {
 		super(true);
 
 		this.sender = new BlokiPacketSender(this);
 		this.verifier = new CorrectionVerifier();
-		this.mistakeLabel = new Label(mistake);
+		this.packet = new BlokiPacket(mistake, null, context, null);
 
 		this.setTitle("Bloki - Crowdsourced typo fixjng");
 		this.setText("Bloki - Crowdsourced typo fixjng");
@@ -60,8 +60,8 @@ public class CorrectionDialog extends DialogBox implements ClickHandler,
 			@Override
 			public void onClick(final ClickEvent event) {
 				final String status = CorrectionDialog.this.verifier.verify(
-						CorrectionDialog.this.mistakeLabel.getText(),
-						CorrectionDialog.this.correctionArea.getText());
+						CorrectionDialog.this.packet.getMistake(),
+						CorrectionDialog.this.packet.getCorrection());
 				if (status != null) {
 					CorrectionDialog.this.statusLabel.setHTML(status);
 
@@ -70,13 +70,12 @@ public class CorrectionDialog extends DialogBox implements ClickHandler,
 					CorrectionDialog.this.statusLabel.setHTML("Sending...");
 				}
 
-				final String mistake = CorrectionDialog.this.mistakeLabel
-						.getText();
-				final String correction = CorrectionDialog.this.correctionArea
-						.getText();
-				final String url = Window.Location.getHref();
+				CorrectionDialog.this.packet
+						.setCorrection(CorrectionDialog.this.correctionArea
+								.getText());
+				CorrectionDialog.this.packet.setUrl(Window.Location.getHref());
 
-				CorrectionDialog.this.sender.send(mistake, correction, url);
+				CorrectionDialog.this.sender.send(CorrectionDialog.this.packet);
 			}
 		});
 
