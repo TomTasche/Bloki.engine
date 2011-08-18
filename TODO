@@ -10,8 +10,3 @@
 - crawler: crawl websites ~1 day after a mistake has been submitted in order to see if the author approved the mistake / correction. if he did, store the mistake <-> translation in a database (case. insensitive!).
 -> database of known mistakes
 --> crawl bloki'er's websites for known mistakes and report them automatically
-
-- new design:
--> ribbon like quickticket.at?
--> look like uservoice?
--> look like getsatisfaction?

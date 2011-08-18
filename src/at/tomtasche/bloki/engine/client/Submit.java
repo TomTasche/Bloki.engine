@@ -1,193 +1,90 @@
 package at.tomtasche.bloki.engine.client;
 
+import at.tomtasche.bloki.engine.client.widget.CorrectionDialog;
+import at.tomtasche.bloki.engine.client.widget.InstructionsDialog;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.xhr.client.ReadyStateChangeHandler;
-import com.google.gwt.xhr.client.XMLHttpRequest;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Submit implements EntryPoint {
+public class Submit implements EntryPoint, MouseDownHandler {
 
-    com.google.gwt.dom.client.Element lastSelect;
+	Element lastSelect;
 
 
-    @Override
-    public void onModuleLoad() {
-	Element div = DOM.createDiv();
-	div.setAttribute("style", "position:fixed; right:10px; bottom: 0; box-shadow: 0 0 10px #666; padding:10px; background-color:#333; color:#FFF; font-family: Arial;");
-	div.setInnerText("Bloki - Fix typos");
+	@Override
+	public void onModuleLoad() {
+		final Element bloki_div = DOM.createDiv();
+		bloki_div.setAttribute("class", "bloki_div");
+		
+		final Element bloki_left = DOM.createDiv();
+		bloki_left.setAttribute("class", "bloki_left");
 
-	Label.wrap(Document.get().getBody()).addMouseUpHandler(new MouseUpHandler() {
+		final Element bloki_center = DOM.createDiv();
+		bloki_center.setAttribute("class", "bloki_center");
 
-	    @Override
-	    public void onMouseUp(MouseUpEvent event) {
-		lastSelect = Element.as(Element.as(event.getNativeEvent().getEventTarget()).cloneNode(true));
-	    }
-	});
+		final Element bloki_right = DOM.createDiv();
+		bloki_right.setAttribute("class", "bloki_right");
 
-	Label.wrap(div).addMouseDownHandler(new MouseDownHandler() {
+		bloki_div.appendChild(bloki_left);
+		bloki_div.appendChild(bloki_center);
+		bloki_div.appendChild(bloki_right);
 
-	    @Override
-	    public void onMouseDown(MouseDownEvent event) {
-		// storing the mistake until we build the json object doesnt work...
-		// -> {"mistake":{"extentNode":null, "baseNode":null, "anchorNode":null, "focusNode":null, "rangeCount":0, "anchorOffset":0, "baseOffset":0, "focusOffset":0, "type":"None", "isCollapsed":true, "extentOffset":0}, "correction":"Blokiaw ", "url":"http://localhost:8888/submiti.html"}
-		// also, checking mistake for its length doesnt work either
-		String mistake = getSelectedText();
+		Label.wrap(bloki_div).addMouseDownHandler(this);
+		
+		Label.wrap(Document.get().getBody()).addMouseUpHandler(new MouseUpHandler() {
 
-		// ... so we're storing it in a invisible textbox. ;) PWND!
-		// TODO: find this problem's cause, please.
-		final TextBox hack = new TextBox();
-		hack.setText(mistake);
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				lastSelect = Element.as(Element.as(event.getNativeEvent().getEventTarget()).cloneNode(true));
+			}
+		});
 
-		if (hack.getText() == null || hack.getText().length() == 0) {
-		    Window.open("http://goo.gl/Ortds", "_blank", null);
+		Document.get().getBody().appendChild(bloki_div);
+	}
 
-		    return;
+	@Override
+	public final void onMouseDown(final MouseDownEvent event) {
+		final String mistake = this.getSelectedText();
+		final Label mistakeLabel = new Label(mistake);
+
+		if (mistakeLabel.getText() == null
+				|| mistakeLabel.getText().trim().length() == 0) {
+			// Window.open("http://goo.gl/Ortds", "_blank", null);
+
+			new InstructionsDialog().show();
+
+			return;
 		}
 
-		final DialogBox dialog = new DialogBox(true);
-		dialog.setText("Bloki - Crowdsourced typo fixjng");
-		dialog.setAnimationEnabled(true);
-
-		HTML label = new HTML("What should '<b>" + mistake + "</b>' read like instead?");
-		final TextBox textBox = new TextBox();
-		textBox.setWidth("90%");
-		textBox.setText(mistake);
-
-		final HTML error = new HTML();
-
-		Button sendButton = new Button("Send");
-		sendButton.addClickHandler(new ClickHandler() {
-
-		    @Override
-		    public void onClick(ClickEvent event) {
-			if (textBox.getText().length() == 0) {
-			    error.setHTML("<span style='color: red;'>Please enter a correction.</span>");
-
-			    return;
-			} else if (textBox.getText().equals(hack.getText())) {
-			    error.setHTML("<span style='color: red;'>Correction matches mistake. Please insert a valid correction.</span>");
-
-			    return;
-			}
-
-			error.setHTML("Sending...");
-
-			XMLHttpRequest request = XMLHttpRequest.create();
-			request.open("POST", "http://bloki-engine.appspot.com/submit");
-			request.setOnReadyStateChange(new ReadyStateChangeHandler() {
-
-			    @Override
-			    public void onReadyStateChange(XMLHttpRequest xhr) {
-				dialog.hide();
-
-				if (xhr.getStatus() != 200 && xhr.getStatus() != 401) {
-				    error.setHTML("<span style='color: red;'>I couldn't reach the server.\nAre you really connected to the internet?\nIf so, feel free to contact me about this error. :)</span>");
-				}
-			    }
-			});
-
-			JSONObject object = new JSONObject();
-			object.put("mistake", new JSONString(hack.getText()));
-			object.put("correction", new JSONString(textBox.getText()));
-			object.put("url", new JSONString(Window.Location.getHref()));
-
-			request.send(object.toString());
-		    }
-		});
-
-		Button closeButton = new Button("Close");
-		closeButton.addClickHandler(new ClickHandler() {
-
-		    @Override
-		    public void onClick(ClickEvent event) {
-			dialog.hide();
-		    }
-		});
-
-		HorizontalPanel buttonPanel = new HorizontalPanel();
-		buttonPanel.setWidth("100%");
-		buttonPanel.add(closeButton);
-		buttonPanel.add(sendButton);
-		buttonPanel.setCellHorizontalAlignment(closeButton, HorizontalPanel.ALIGN_LEFT);
-		buttonPanel.setCellHorizontalAlignment(sendButton, HorizontalPanel.ALIGN_RIGHT);
-
-		VerticalPanel panel = new VerticalPanel();
-		panel.setWidth("100%");
-		panel.add(label);
-		panel.add(textBox);
-		panel.add(error);
-		panel.add(buttonPanel);
-
-		dialog.add(panel);
-
-		dialog.center();
-		dialog.show();
-
-		textBox.setFocus(true);
-	    }
-	});
-
-	RootPanel.getBodyElement().appendChild(div);
-    }
-
-    private String getSelectionContext() {
-	if (lastSelect == null) return "";
-	
-	NodeList<Node> nodes = lastSelect.getChildNodes();
-	StringBuilder builder = new StringBuilder();
-	for (int i = 0; i < nodes.getLength(); i++) {
-	    if (nodes.getItem(i).getNodeValue() == null || nodes.getItem(i).getNodeValue().trim().isEmpty()) continue;
-
-	    if (i == 0) {
-		builder.append("<b>" + nodes.getItem(i).getNodeValue() + "</b>");
-	    } else {
-		builder.append(nodes.getItem(i).getNodeValue());
-	    }
+		new CorrectionDialog(mistake).show();
 	}
 
-	return builder.toString();
-    }
+	/**
+	 * @author codetoad.com -
+	 *         http://www.codetoad.com/javascript_get_selected_text.asp
+	 * @returns {String}
+	 */
+	private native String getSelectedText() /*-{
+		var text = '';
 
+		if (window.getSelection) {
+			text = window.getSelection();
+		} else if (document.getSelection) {
+			text = document.getSelection();
+		} else if (document.selection) {
+			text = document.selection.createRange().text;
+		}
 
-    /**
-     * @author codetoad.com - http://www.codetoad.com/javascript_get_selected_text.asp
-     * @returns {String}
-     */
-    private native String getSelectedText() /*-{
-	var text = '';
-
-	if (window.getSelection) {
-		text = window.getSelection();
-	} else if (document.getSelection) {
-		text = document.getSelection();
-	} else if (document.selection) {
-		text = document.selection.createRange().text;
-	}
-
-	return text;
-    }-*/;
+		return text;
+	}-*/;
 }

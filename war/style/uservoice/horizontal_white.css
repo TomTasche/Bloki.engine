@@ -1,0 +1,18 @@
+@import
+	url('http://bloki-engine.appspot.com/submit/gwt/chrome/chrome.css');
+
+.bloki_div {
+	width: 204px;
+	height: 32px;
+	background-image:
+		url('http://bloki-engine.appspot.com/img/bloki_uservoice_horizontal_white.png');
+	background-repeat: no-repeat;
+	background-position: top left;
+	position: absolute;
+	right: 100px;
+	bottom: 0px;
+}
+
+.bloki_div:hover {
+	cursor: pointer;
+}
