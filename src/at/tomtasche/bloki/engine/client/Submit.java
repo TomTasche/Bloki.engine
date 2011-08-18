@@ -20,12 +20,11 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 	Element lastSelect;
 
-
 	@Override
 	public void onModuleLoad() {
 		final Element bloki_div = DOM.createDiv();
 		bloki_div.setAttribute("class", "bloki_div");
-		
+
 		final Element bloki_left = DOM.createDiv();
 		bloki_left.setAttribute("class", "bloki_left");
 
@@ -40,14 +39,17 @@ public class Submit implements EntryPoint, MouseDownHandler {
 		bloki_div.appendChild(bloki_right);
 
 		Label.wrap(bloki_div).addMouseDownHandler(this);
-		
-		Label.wrap(Document.get().getBody()).addMouseUpHandler(new MouseUpHandler() {
 
-			@Override
-			public void onMouseUp(MouseUpEvent event) {
-				lastSelect = Element.as(Element.as(event.getNativeEvent().getEventTarget()).cloneNode(true));
-			}
-		});
+		Label.wrap(Document.get().getBody()).addMouseUpHandler(
+				new MouseUpHandler() {
+
+					@Override
+					public void onMouseUp(final MouseUpEvent event) {
+						Submit.this.lastSelect = Element.as(Element.as(
+								event.getNativeEvent().getEventTarget())
+								.cloneNode(true));
+					}
+				});
 
 		Document.get().getBody().appendChild(bloki_div);
 	}
@@ -75,16 +77,16 @@ public class Submit implements EntryPoint, MouseDownHandler {
 	 * @returns {String}
 	 */
 	private native String getSelectedText() /*-{
-		var text = '';
+											var text = '';
 
-		if (window.getSelection) {
-			text = window.getSelection();
-		} else if (document.getSelection) {
-			text = document.getSelection();
-		} else if (document.selection) {
-			text = document.selection.createRange().text;
-		}
+											if (window.getSelection) {
+											text = window.getSelection();
+											} else if (document.getSelection) {
+											text = document.getSelection();
+											} else if (document.selection) {
+											text = document.selection.createRange().text;
+											}
 
-		return text;
-	}-*/;
+											return text;
+											}-*/;
 }
