@@ -1,10 +1,15 @@
 package at.tomtasche.bloki.engine.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.DOM;
@@ -26,11 +31,22 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
  */
 public class Submit implements EntryPoint {
 
+    com.google.gwt.dom.client.Element lastSelect;
+
+
     @Override
     public void onModuleLoad() {
 	Element div = DOM.createDiv();
 	div.setAttribute("style", "position:fixed; right:10px; bottom: 0; box-shadow: 0 0 10px #666; padding:10px; background-color:#333; color:#FFF; font-family: Arial;");
 	div.setInnerText("Bloki - Fix typos");
+
+	Label.wrap(Document.get().getBody()).addMouseUpHandler(new MouseUpHandler() {
+
+	    @Override
+	    public void onMouseUp(MouseUpEvent event) {
+		lastSelect = Element.as(Element.as(event.getNativeEvent().getEventTarget()).cloneNode(true));
+	    }
+	});
 
 	Label.wrap(div).addMouseDownHandler(new MouseDownHandler() {
 
@@ -45,7 +61,7 @@ public class Submit implements EntryPoint {
 		// TODO: find this problem's cause, please.
 		final TextBox hack = new TextBox();
 		hack.setText(mistake);
-		
+
 		if (hack.getText() == null || hack.getText().length() == 0) {
 		    Window.open("http://goo.gl/Ortds", "_blank", null);
 
@@ -60,7 +76,7 @@ public class Submit implements EntryPoint {
 		final TextBox textBox = new TextBox();
 		textBox.setWidth("90%");
 		textBox.setText(mistake);
-		
+
 		final HTML error = new HTML();
 
 		Button sendButton = new Button("Send");
@@ -70,14 +86,14 @@ public class Submit implements EntryPoint {
 		    public void onClick(ClickEvent event) {
 			if (textBox.getText().length() == 0) {
 			    error.setHTML("<span style='color: red;'>Please enter a correction.</span>");
-			    
+
 			    return;
 			} else if (textBox.getText().equals(hack.getText())) {
 			    error.setHTML("<span style='color: red;'>Correction matches mistake. Please insert a valid correction.</span>");
-			    
+
 			    return;
 			}
-			
+
 			error.setHTML("Sending...");
 
 			XMLHttpRequest request = XMLHttpRequest.create();
@@ -137,7 +153,25 @@ public class Submit implements EntryPoint {
 
 	RootPanel.getBodyElement().appendChild(div);
     }
-    
+
+    private String getSelectionContext() {
+	if (lastSelect == null) return "";
+	
+	NodeList<Node> nodes = lastSelect.getChildNodes();
+	StringBuilder builder = new StringBuilder();
+	for (int i = 0; i < nodes.getLength(); i++) {
+	    if (nodes.getItem(i).getNodeValue() == null || nodes.getItem(i).getNodeValue().trim().isEmpty()) continue;
+
+	    if (i == 0) {
+		builder.append("<b>" + nodes.getItem(i).getNodeValue() + "</b>");
+	    } else {
+		builder.append(nodes.getItem(i).getNodeValue());
+	    }
+	}
+
+	return builder.toString();
+    }
+
 
     /**
      * @author codetoad.com - http://www.codetoad.com/javascript_get_selected_text.asp

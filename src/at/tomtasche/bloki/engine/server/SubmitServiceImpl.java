@@ -24,13 +24,13 @@ import com.googlecode.objectify.ObjectifyService;
 @SuppressWarnings("serial")
 public class SubmitServiceImpl extends RemoteServiceServlet implements SubmitService {
 
-    public String submit(String mistake, String correction, String url) throws IllegalArgumentException {
+    public String submit(String mistake, String correction, String context, String url) throws IllegalArgumentException {
 	// Escape data from the client to avoid cross-site script vulnerabilities.
 	url = escapeHtml(url);
 	mistake = escapeHtml(mistake);
 	correction = escapeHtml(correction);
 	
-	BlokiPacket packet = new BlokiPacket(mistake, correction, url);
+	BlokiPacket packet = new BlokiPacket(mistake, correction, context, url);
 
 	String body = buildMessage(packet);
 
@@ -92,7 +92,13 @@ public class SubmitServiceImpl extends RemoteServiceServlet implements SubmitSer
 
     private String buildMessage(BlokiPacket packet) {
 	String body = "<html>Hello,<p>One of your readers found the following mistake: '<b>" + packet.getMistake() + "</b>' <a href=\"" + packet.getUrl() + "\">on your blog</a>.<br />";
-	body += "He suggests to replace it with '<b>" + packet.getCorrection() + "</b>'.</p>Have a great, typo-free day,<br />Bloki Bot.</html>";
+	body += "He suggests to replace it with '<b>" + packet.getCorrection() + "</b>'.</p>Have a great, typo-free day,<br />Bloki Bot.";
+	
+	if (packet.getContext() != null && packet.getContext().trim().isEmpty()) {
+	    body += "<br /><p>PS: That's what we guess is the mistake's enclosing text: <p><i>" + packet.getContext() + "</i></p>Please don't think that's correct for sure! It's just a guess...</p>";
+	}
+	
+	body += "</html>";
 
 	return body;
     }

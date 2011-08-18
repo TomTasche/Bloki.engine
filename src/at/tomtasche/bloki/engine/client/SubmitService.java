@@ -8,5 +8,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("submit")
 public interface SubmitService extends RemoteService {
-    String submit(String mistake, String correction, String url) throws IllegalArgumentException;
+    String submit(String mistake, String correction, String context, String url) throws IllegalArgumentException;
 }
