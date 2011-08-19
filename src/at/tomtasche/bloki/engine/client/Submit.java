@@ -47,9 +47,8 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 					@Override
 					public void onMouseUp(final MouseUpEvent event) {
-						Submit.this.lastSelect = Element.as(Element.as(
-								event.getNativeEvent().getEventTarget())
-								.cloneNode(true));
+						Submit.this.lastSelect = Element.as(event
+								.getNativeEvent().getEventTarget());
 					}
 				});
 
@@ -60,10 +59,8 @@ public class Submit implements EntryPoint, MouseDownHandler {
 	public final void onMouseDown(final MouseDownEvent event) {
 		final String mistake = this.getSelectedText();
 		final String context = this.getSelectionContext();
-		final Label mistakeLabel = new Label(mistake);
 
-		if (mistakeLabel.getText() == null
-				|| mistakeLabel.getText().trim().length() == 0) {
+		if (mistake == null || mistake.trim().length() == 0) {
 			// Window.open("http://goo.gl/Ortds", "_blank", null);
 
 			new InstructionsDialog().show();
@@ -79,7 +76,8 @@ public class Submit implements EntryPoint, MouseDownHandler {
 	 *         http://www.codetoad.com/javascript_get_selected_text.asp
 	 * @returns {String}
 	 */
-	private native String getSelectedText() /*-{
+	private native String getSelectedText()
+	/*-{
 											var text = '';
 
 											if (window.getSelection) {
@@ -90,7 +88,7 @@ public class Submit implements EntryPoint, MouseDownHandler {
 											text = document.selection.createRange().text;
 											}
 
-											return text;
+											return text.toString();
 											}-*/;
 
 	private String getSelectionContext() {

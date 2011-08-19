@@ -17,7 +17,18 @@ public class BlokiPacket {
 			final String context, final String url) {
 		this.mistake = mistake;
 		this.correction = correction;
+		this.context = context;
 		this.url = url;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("BlokiPacket [mistake=").append(this.mistake)
+				.append(", correction=").append(this.correction)
+				.append(", context=").append(this.context).append(", url=")
+				.append(this.url).append("]");
+		return builder.toString();
 	}
 
 	public String getMistake() {

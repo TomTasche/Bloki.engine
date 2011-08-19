@@ -133,7 +133,7 @@ public class SubmitServlet extends HttpServlet {
 
 		if (packet.getContext() != null && packet.getContext().trim().isEmpty()) {
 			body += "<p>PPS: That's what we guess is the mistake's enclosing text: <p><i>"
-					+ packet.getContext()
+					+ packet.getContext().trim()
 					+ "</i></p>Please don't think that's correct for sure! It's just a guess...</p>";
 		}
 

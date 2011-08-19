@@ -19,14 +19,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class CorrectionDialog extends DialogBox implements ClickHandler,
 		BlokiPacketCallback {
 
-	// storing the mistake until we build the json object doesnt work...
-	// -> {"mistake":{"extentNode":null, "baseNode":null, "anchorNode":null,
-	// "focusNode":null, "rangeCount":0, "anchorOffset":0, "baseOffset":0,
-	// "focusOffset":0, "type":"None", "isCollapsed":true, "extentOffset":0},
-	// "correction":"Blokiaw ", "url":"http://localhost:8888/submiti.html"}
-	// also, checking mistake for its length doesnt work either
-	// ... so we're storing it in a invisible label. ;)
-	// TODO: find this problem's cause, please.
 	BlokiPacket packet;
 	TextArea correctionArea;
 	HTML statusLabel;
@@ -61,7 +53,7 @@ public class CorrectionDialog extends DialogBox implements ClickHandler,
 			public void onClick(final ClickEvent event) {
 				final String status = CorrectionDialog.this.verifier.verify(
 						CorrectionDialog.this.packet.getMistake(),
-						CorrectionDialog.this.packet.getCorrection());
+						CorrectionDialog.this.correctionArea.getText());
 				if (status != null) {
 					CorrectionDialog.this.statusLabel.setHTML(status);
 
