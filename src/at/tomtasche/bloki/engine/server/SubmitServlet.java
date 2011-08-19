@@ -121,24 +121,38 @@ public class SubmitServlet extends HttpServlet {
 	}
 
 	private String buildMessage(final BlokiPacket packet) {
+		final String mistake = this.trimAndReplace(packet.getMistake());
+		final String correction = this.trimAndReplace(packet.getCorrection());
+		final String context = this.trimAndReplace(packet.getContext());
+
 		String body = "<html>Hello,<p>One of your readers found the following mistake: '<b>"
-				+ packet.getMistake()
+				+ mistake
 				+ "</b>' <a href=\""
 				+ packet.getUrl()
 				+ "\">on your blog</a>.<br />";
 		body += "He suggests to replace it with '<b>"
-				+ packet.getCorrection()
+				+ correction
 				+ "</b>'.</p>Have a great, typo-free day,<br /><a href='http://goo.gl/dK84V'>Tom</a> and your Bloki Bot.";
 		body += "<p>PS: I would love to hear from you! If you have anything to say about Bloki, ping me at <a href='mailto:tomtasche+bloki@gmail.com'>tomtasche@gmail.com</a></p>";
 
-		if (packet.getContext() != null && packet.getContext().trim().isEmpty()) {
+		if (context != null && !context.trim().isEmpty()) {
 			body += "<p>PPS: That's what we guess is the mistake's enclosing text: <p><i>"
-					+ packet.getContext().trim()
+					+ context
 					+ "</i></p>Please don't think that's correct for sure! It's just a guess...</p>";
 		}
 
 		body += "</html>";
 
 		return body;
+	}
+
+	private String trimAndReplace(String text) {
+		if (text == null)
+			return null;
+
+		text = text.trim();
+		text = text.replaceAll("\n", "<br />");
+
+		return text;
 	}
 }
