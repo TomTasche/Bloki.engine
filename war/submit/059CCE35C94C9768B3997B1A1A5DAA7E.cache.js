@@ -3,7 +3,7 @@ var $gwt_version = "2.3.0";
 var $wnd = window;
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
-var $strongName = 'F8954CF7DE97EEB26445D7496B8573EC';
+var $strongName = '059CCE35C94C9768B3997B1A1A5DAA7E';
 var $stats = $wnd.__gwtStatsEvent ? function(a) {return $wnd.__gwtStatsEvent(a);} : null;
 var $sessionId = $wnd.__gwtStatsSessionId ? $wnd.__gwtStatsSessionId : null;
 $stats && $stats({moduleName:'submit',sessionId:$sessionId,subSystem:'startup',evtGroup:'moduleStartup',millis:(new Date()).getTime(),type:'moduleEvalStart'});
@@ -123,7 +123,6 @@ _.onMouseDown = function onMouseDown(event_0){
   }
   mistake = $getText($getRange(getSelection_0($wnd)));
   context = $toString(contextBuilder.data_0);
-  $wnd.alert(context);
   if (mistake == null || $trim(mistake).length == 0) {
     $show_0(new InstructionsDialog_0);
     return;
