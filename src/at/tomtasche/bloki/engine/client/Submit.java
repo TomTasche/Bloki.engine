@@ -11,7 +11,6 @@ import com.google.gwt.dom.client.Text;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 
 public class Submit implements EntryPoint, MouseDownHandler {
@@ -41,15 +40,14 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 	@Override
 	public final void onMouseDown(final MouseDownEvent event) {
-		StringBuilder contextBuilder = new StringBuilder();
-		for (Text text : Selection.getSelection().getRange().getSelectedTextElements()) {
+		final StringBuilder contextBuilder = new StringBuilder();
+		for (final Text text : Selection.getSelection().getRange()
+				.getSelectedTextElements()) {
 			contextBuilder.append(text.getData());
 		}
-		
+
 		final String mistake = Selection.getSelection().getRange().getText();
 		final String context = contextBuilder.toString();
-		
-		Window.alert(context);
 
 		if (mistake == null || mistake.trim().length() == 0) {
 			new InstructionsDialog().show();
