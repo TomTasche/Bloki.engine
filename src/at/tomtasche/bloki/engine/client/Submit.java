@@ -40,20 +40,25 @@ public class Submit implements EntryPoint, MouseDownHandler {
 
 	@Override
 	public final void onMouseDown(final MouseDownEvent event) {
+		String mistake = null;
+		try {
+			// i'm too lazy to find out which one of these is null...
+			mistake = Selection.getSelection().getRange().getText();
+		} catch (Exception e) {}
+		
+		if (mistake == null || mistake.trim().length() == 0) {
+			new InstructionsDialog().show();
+
+			return;
+		}
+
 		final StringBuilder contextBuilder = new StringBuilder();
 		for (final Text text : Selection.getSelection().getRange()
 				.getSelectedTextElements()) {
 			contextBuilder.append(text.getData());
 		}
 
-		final String mistake = Selection.getSelection().getRange().getText();
 		final String context = contextBuilder.toString();
-
-		if (mistake == null || mistake.trim().length() == 0) {
-			new InstructionsDialog().show();
-
-			return;
-		}
 
 		new CorrectionDialog(mistake, context).show();
 	}
