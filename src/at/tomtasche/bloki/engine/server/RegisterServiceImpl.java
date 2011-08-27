@@ -1,11 +1,20 @@
 package at.tomtasche.bloki.engine.server;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import at.tomtasche.bloki.engine.client.RegisterService;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import at.tomtasche.bloki.engine.client.register.RegisterService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.googlecode.objectify.Objectify;
@@ -43,7 +52,15 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 			return "Couldn't parse your mail: '" + mail + "'.";
 		}
 
-		this.createCustomer(url.getHost(), mail);
+		final Customer newCustomer = this.createCustomer(url.getHost(), mail);
+
+		try {
+			this.sendMail(newCustomer);
+		} catch (final UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (final MessagingException e) {
+			e.printStackTrace();
+		}
 
 		return "Welcome, <a href='http://"
 				+ url.getHost()
@@ -52,12 +69,14 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 				+ "</a>. Thank you very much for signing up for Bloki. I can't wait to hear what you think...<br />Now head over to the <a href='http://goo.gl/PUYGd'>instructions on how to install Bloki on your blog</a>.";
 	}
 
-	private void createCustomer(final String url, final String mail) {
+	private Customer createCustomer(final String url, final String mail) {
 		ObjectifyService.register(Customer.class);
 		final Objectify objectify = ObjectifyService.begin();
 
 		final Customer customer = new Customer(url, mail);
 		objectify.put(customer);
+
+		return customer;
 	}
 
 	/**
@@ -87,5 +106,26 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 		}
 		return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
 				.replaceAll(">", "&gt;");
+	}
+
+	private void sendMail(final Customer customer)
+			throws UnsupportedEncodingException, MessagingException {
+		final Properties props = new Properties();
+		final Session session = Session.getDefaultInstance(props, null);
+
+		final MimeMessage message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(
+				"bloki-engine@bloki-engine.appspotmail.com", "Bloki Bot"));
+
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+				"tomtasche+bloki@gmail.com", "Thomas Taschauer"));
+
+		message.setSubject("New customer");
+		message.setText("<html>" + customer.getMail()
+				+ " signed up for Bloki. <a href='" + customer.getUrl()
+				+ "'>Check it out!</a></html>", "text/html");
+		message.addHeader("Content-Type", "text/html");
+
+		Transport.send(message);
 	}
 }

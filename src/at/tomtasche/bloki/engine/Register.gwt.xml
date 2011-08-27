@@ -15,9 +15,10 @@
   <inherits name="com.google.gwt.json.JSON" />
 
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='at.tomtasche.bloki.engine.client.Register'/>
+  <entry-point class='at.tomtasche.bloki.engine.client.register.Register'/>
 
   <!-- Specify the paths for translatable code                    -->
-  <source path='client'/>
+  <source path='client/register'/>
+  <source path='client/shared'/>
   <source path='shared'/>
 </module>

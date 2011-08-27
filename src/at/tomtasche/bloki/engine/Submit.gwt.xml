@@ -19,10 +19,11 @@
   <inherits name='com.bfr.client.Selection'/>
 
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='at.tomtasche.bloki.engine.client.Submit'/>
+  <entry-point class='at.tomtasche.bloki.engine.client.submit.Submit'/>
 
   <!-- Specify the paths for translatable code                    -->
-  <source path='client'/>
+  <source path='client/submit'/>
+  <source path='client/shared'/>
   <source path='shared'/>
 
   <!-- Cross-site JS -->

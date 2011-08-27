@@ -1,0 +1,2 @@
+serviceClass: at.tomtasche.bloki.engine.client.register.RegisterService
+path: 270C079BB3F9CC2851D002FCE68D9F19.gwt.rpc
