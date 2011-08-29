@@ -1,11 +1,11 @@
 @import
-	url('http://bloki-engine.appspot.com/submit/gwt/chrome/chrome.css');
+	url('submit/gwt/chrome/chrome.css');
 
 .bloki_div {
 	width: 180px;
 	height: 45px;
 	background-image:
-		url('http://bloki-engine.appspot.com/img/bloki_ribbon_horizontal_red.png');
+		url('../../img/bloki_ribbon_horizontal_red.png');
 	background-repeat: no-repeat;
 	background-position: center right;
 	position: fixed;
@@ -16,4 +16,110 @@
 .bloki_div:hover {
 	width: 190px;
 	cursor: pointer;
+}
+
+.gwt-DialogBox {
+	color: white;
+	text-shadow: #555555 0px -1px 1px;
+}
+
+.gwt-DialogBox .Caption {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogtopcenter.png);
+	padding-top: 15px;
+	border: none;
+	font-weight: bold;
+}
+
+.gwt-DialogBox .dialogContent {
+	
+}
+
+.gwt-DialogBox .dialogMiddleCenter {
+	padding: 3px;
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogmiddlecenter.png);
+}
+
+.gwt-DialogBox .dialogBottomCenter {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogbottomcenter.png);
+}
+
+.gwt-DialogBox .dialogMiddleLeft {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogmiddleleft.png)
+		repeat-y;
+}
+
+.gwt-DialogBox .dialogMiddleRight {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogmiddleright.png)
+		repeat-y;
+}
+
+.gwt-DialogBox .dialogTopLeftInner {
+	width: 20px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogTopRightInner {
+	width: 20px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogBottomLeftInner {
+	width: 20px;
+	height: 20px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogBottomRightInner {
+	width: 20px;
+	height: 20px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogTopLeft {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogtopleft.png)
+		no-repeat;
+}
+
+.gwt-DialogBox .dialogTopRight {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogtopright.png)
+		no-repeat;
+}
+
+.gwt-DialogBox .dialogBottomLeft {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogbottomleft.png);
+}
+
+.gwt-DialogBox .dialogBottomRight {
+	background:
+		url(http://bloki-engine.appspot.com/img/dialog/bloki_dialog_ribbon_red_dialogbottomright.png);
+}
+
+* html .gwt-DialogBox .dialogTopLeftInner {
+	width: 20px;
+	overflow: hidden;
+}
+
+* html .gwt-DialogBox .dialogTopRightInner {
+	width: 20px;
+	overflow: hidden;
+}
+
+* html .gwt-DialogBox .dialogBottomLeftInner {
+	width: 20px;
+	height: 20px;
+	overflow: hidden;
+}
+
+* html .gwt-DialogBox .dialogBottomRightInner {
+	width: 20px;
+	height: 20px;
+	overflow: hidden;
 }

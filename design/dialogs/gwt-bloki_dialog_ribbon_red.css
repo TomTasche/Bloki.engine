@@ -1,0 +1,74 @@
+.gwt-DialogBox {
+  color: white;
+  text-shadow: #555555 0px -1px 1px;
+}
+
+.gwt-DialogBox .Caption {
+  background: url(images/bloki_dialog_ribbon_red_dialogtopcenter.png);
+  padding-top: 15px;
+  border: none;
+  font-weight: bold;
+}
+.gwt-DialogBox .dialogContent {
+}
+.gwt-DialogBox .dialogMiddleCenter {
+  padding: 3px;
+  background: url(images/bloki_dialog_ribbon_red_dialogmiddlecenter.png);
+}
+.gwt-DialogBox .dialogBottomCenter {
+  background: url(images/bloki_dialog_ribbon_red_dialogbottomcenter.png);
+}
+.gwt-DialogBox .dialogMiddleLeft {
+  background: url(images/bloki_dialog_ribbon_red_dialogmiddleleft.png) repeat-y;
+}
+.gwt-DialogBox .dialogMiddleRight {
+  background: url(images/bloki_dialog_ribbon_red_dialogmiddleright.png) repeat-y;
+}
+.gwt-DialogBox .dialogTopLeftInner {
+  width: 20px;
+  zoom: 1;
+}
+.gwt-DialogBox .dialogTopRightInner {
+  width: 20px;
+  zoom: 1;
+}
+.gwt-DialogBox .dialogBottomLeftInner {
+  width: 20px;
+  height: 20px;
+  zoom: 1;
+}
+.gwt-DialogBox .dialogBottomRightInner {
+  width: 20px;
+  height: 20px;
+  zoom: 1;
+}
+.gwt-DialogBox .dialogTopLeft {
+  background: url(images/bloki_dialog_ribbon_red_dialogtopleft.png) no-repeat;
+}
+.gwt-DialogBox .dialogTopRight {
+  background: url(images/bloki_dialog_ribbon_red_dialogtopright.png) no-repeat;
+}
+.gwt-DialogBox .dialogBottomLeft {
+  background: url(images/bloki_dialog_ribbon_red_dialogbottomleft.png);
+}
+.gwt-DialogBox .dialogBottomRight {
+  background: url(images/bloki_dialog_ribbon_red_dialogbottomright.png);
+}
+* html .gwt-DialogBox .dialogTopLeftInner {
+  width: 20px;
+  overflow: hidden;
+}
+* html .gwt-DialogBox .dialogTopRightInner {
+  width: 20px;
+  overflow: hidden;
+}
+* html .gwt-DialogBox .dialogBottomLeftInner {
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+}
+* html .gwt-DialogBox .dialogBottomRightInner {
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+}

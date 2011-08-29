@@ -11,9 +11,6 @@
   <inherits name='com.google.gwt.user.theme.chrome.Chrome'/>
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 
-  <!-- Other module inherits                                      -->
-  <inherits name="com.google.gwt.json.JSON" />
-
   <!-- Specify the app entry point class.                         -->
   <entry-point class='at.tomtasche.bloki.engine.client.register.Register'/>
 
